@@ -1638,6 +1638,7 @@ ${instruction ? `Special instruction from the seller: "${instruction}"\n\n` : ''
         lastMeta: null, // {intent, notes, suggested_followups} from the most recent AI reply
       },
       rewriting: false, // global flag so double-tap doesn't fire two rewrites
+      connecting: false, // true while validating the API key on first-run
     };
 
     function setView(view, { draftId } = {}) {
@@ -1688,7 +1689,7 @@ ${instruction ? `Special instruction from the seller: "${instruction}"\n\n` : ''
               <h3>🔑 Connect the genie</h3>
               <p class="muted">The genie needs an Anthropic API key to work its magic. Free to make, $5 in starter credits, and the key stays on your device only.</p>
               <div style="height:12px"></div>
-              <button class="btn primary" data-action="settings">Open Settings</button>
+              <button class="btn primary magic" data-action="goto-connect">Connect now</button>
             </div>
           ` : ''}
 
@@ -2071,6 +2072,45 @@ ${instruction ? `Special instruction from the seller: "${instruction}"\n\n` : ''
       `;
     }
 
+    function renderConnect() {
+      return `
+        <div class="container page-enter" style="padding-top: calc(28px + var(--safe-top));">
+          <div style="text-align:center; margin-bottom: 22px;">
+            <div class="float-logo" style="display:inline-block; transform: scale(0.85); transform-origin: center;">${logoSvg('brand-mark')}</div>
+            <h1 class="brand-name" style="margin: 10px 0 4px; font-size: 30px;">Connect Claude</h1>
+            <p class="muted" style="margin: 0; font-size: 14.5px;">One-time setup to power the genie's brain.</p>
+          </div>
+
+          <div class="card" style="border-color: rgba(124, 92, 255, 0.25); background: linear-gradient(135deg, rgba(124,92,255,0.06) 0%, rgba(91,140,255,0.04) 100%);">
+            <h3 style="margin: 0 0 8px; font-size: 16px;">Why an API key?</h3>
+            <p class="muted" style="font-size: 14px; line-height: 1.55; margin: 0;">
+              Sales Genie runs in your browser. To write your listings and draft buyer replies, it calls Claude (the AI) directly using <em>your</em> Anthropic account.
+              You pay Anthropic per use — usually a few cents per listing. <strong>The first $5 is free</strong>, enough for a few hundred listings.
+              The key stays only on this device.
+            </p>
+          </div>
+
+          <h3 style="font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 22px 4px 10px; font-weight: 700;">Step 1 — Grab a free key</h3>
+          <a class="btn" target="_blank" rel="noopener" href="https://console.anthropic.com/settings/keys" style="text-decoration:none; padding: 14px;">
+            🔑 Open console.anthropic.com →
+          </a>
+          <p class="muted small" style="margin: 8px 4px 0;">Sign up (or sign in), tap "Create Key," copy the long string starting with <code>sk-ant-</code>. Takes ~3 minutes.</p>
+
+          <h3 style="font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 24px 4px 10px; font-weight: 700;">Step 2 — Paste it here</h3>
+          <label class="field">
+            <input class="input" id="onboard-apikey" type="password" placeholder="sk-ant-..." autocomplete="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button class="btn primary magic" data-action="connect-save" style="margin-top: 4px; padding: 16px; font-size: 16px;">
+            ${state.connecting ? thinking('processing') : '✨ Connect the genie'}
+          </button>
+
+          <p class="muted small center" style="margin-top: 14px;">
+            Stored only on this device. Nothing leaves your phone except calls to Anthropic.
+          </p>
+        </div>
+      `;
+    }
+
     function renderWelcome() {
       return `
         <div class="container page-enter" style="padding-top: calc(36px + var(--safe-top));">
@@ -2415,6 +2455,7 @@ ${instruction ? `Special instruction from the seller: "${instruction}"\n\n` : ''
       let html = '';
       switch (state.view) {
         case 'welcome': html = renderWelcome(); break;
+        case 'connect': html = renderConnect(); break;
         case 'home': html = await renderHome(); break;
         case 'sales': html = await renderSales(); break;
         case 'new': html = await renderNew(); break;
@@ -2489,8 +2530,11 @@ ${instruction ? `Special instruction from the seller: "${instruction}"\n\n` : ''
 
           case 'welcome-done':
             localStorage.setItem('seen_welcome', '1');
-            setView('home');
+            // After welcome, route based on whether the key is set yet.
+            setView(settings.apiKey ? 'home' : 'connect');
             break;
+          case 'connect-save': await onConnectSave(); break;
+          case 'goto-connect': setView('connect'); break;
           case 'pick-category': onPickCategory(id); break;
           case 'pick-item': onPickItem(id); break;
           case 'step-back': onStepBack(); break;
@@ -2962,6 +3006,40 @@ ${instruction ? `Special instruction from the seller: "${instruction}"\n\n` : ''
       }
     }
 
+    async function onConnectSave() {
+      if (state.connecting) return;
+      const input = document.getElementById('onboard-apikey');
+      const k = (input?.value || '').trim();
+      if (!k) { toast('Paste your API key first.', 'bad'); return; }
+      if (!k.startsWith('sk-ant-')) {
+        toast("That doesn't look like an Anthropic key (should start with 'sk-ant-').", 'bad', 4000);
+        return;
+      }
+      state.connecting = true;
+      await render();
+      // Save it temporarily and ping Claude with a tiny prompt to verify.
+      const previous = settings.apiKey;
+      settings.apiKey = k;
+      try {
+        await callClaude({
+          system: 'Reply with exactly the word: connected',
+          messages: [{ role: 'user', content: 'ping' }],
+          maxTokens: 8,
+        });
+        // Success!
+        sparkles({ count: 28 });
+        toast('Connected. The genie is awake.', 'good', 2400);
+        setView('home');
+      } catch (err) {
+        // Roll back the key on failure so they can try again.
+        settings.apiKey = previous;
+        toast(err.message || 'Connection failed. Double-check your key.', 'bad', 5000);
+      } finally {
+        state.connecting = false;
+        await render();
+      }
+    }
+
     function onSaveSettings() {
       const wasEmpty = !settings.apiKey;
       const k = document.getElementById('apikey').value.trim();
@@ -3236,8 +3314,12 @@ Now rewrite.`;
     // Boot
     // ============================================================
     (async function init() {
-      // Default to settings if no key on first load
-      if (!settings.apiKey) state.view = 'settings';
+      // First-run flow: welcome → connect → home
+      // Returning user with no key (e.g. cleared storage): straight to connect
+      // Everyone else: home
+      if (!settings.apiKey) {
+        state.view = localStorage.getItem('seen_welcome') ? 'connect' : 'welcome';
+      }
       await render();
     })();
   </script>
