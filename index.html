@@ -1,0 +1,3245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#060912" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Sales Genie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236d5cff'/%3E%3Cstop offset='1' stop-color='%234f8cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M22 44 Q22 38 26 36 L38 36 Q42 38 42 44 L40 46 L24 46 Z' fill='%23f5d97a'/%3E%3Cellipse cx='32' cy='36' rx='9' ry='2' fill='%23dcb654'/%3E%3Cpath d='M28 36 Q26 28 30 24 Q34 22 36 26 Q34 30 30 32 Z' fill='white' opacity='0.85'/%3E%3Ccircle cx='34' cy='20' r='3' fill='white' opacity='0.7'/%3E%3Ccircle cx='40' cy='14' r='2' fill='white' opacity='0.5'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236d5cff'/%3E%3Cstop offset='1' stop-color='%234f8cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M22 44 Q22 38 26 36 L38 36 Q42 38 42 44 L40 46 L24 46 Z' fill='%23f5d97a'/%3E%3Cellipse cx='32' cy='36' rx='9' ry='2' fill='%23dcb654'/%3E%3Cpath d='M28 36 Q26 28 30 24 Q34 22 36 26 Q34 30 30 32 Z' fill='white' opacity='0.85'/%3E%3Ccircle cx='34' cy='20' r='3' fill='white' opacity='0.7'/%3E%3Ccircle cx='40' cy='14' r='2' fill='white' opacity='0.5'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      /* Canvas */
+      --bg: #07091160;
+      --bg-base: #060912;
+      --bg-2: #0f1424;
+      --surface: #161c2e;
+      --surface-2: #1f2740;
+      --surface-3: #2a3554;
+      --border: #2a3553;
+      --border-soft: #1f2740;
+      --text: #eef2fb;
+      --text-2: #c7cee0;
+      --muted: #8b95ad;
+      --muted-2: #6c7591;
+
+      /* Brand palette */
+      --accent: #5b8cff;
+      --accent-soft: #8aabff;
+      --accent-2: #7c5cff;
+      --accent-3: #c084fc;
+      --gold: #f5c863;
+      --gold-soft: #f7d98a;
+
+      /* Status */
+      --good: #22c55e;
+      --good-soft: #4ade80;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+
+      /* Geometry */
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-lg: 22px;
+
+      /* Elevation */
+      --shadow-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 1px rgba(0,0,0,0.2);
+      --shadow-2: 0 6px 14px -4px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
+      --shadow-3: 0 24px 48px -16px rgba(0,0,0,0.6), 0 8px 16px -8px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 0 1px rgba(124, 92, 255, 0.18), 0 8px 24px -8px rgba(124, 92, 255, 0.45);
+
+      /* Motion */
+      --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+      --ease-spring: cubic-bezier(0.4, 1.6, 0.5, 1);
+      --t-fast: 120ms;
+      --t-base: 220ms;
+      --t-slow: 380ms;
+
+      /* Typography */
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-display: 'Fraunces', 'Inter', -apple-system, system-ui, sans-serif;
+
+      /* Brand gradients */
+      --grad-magic: linear-gradient(110deg, #5b8cff 0%, #7c5cff 50%, #c084fc 100%);
+      --grad-magic-soft: linear-gradient(135deg, rgba(124,92,255,0.18) 0%, rgba(91,140,255,0.18) 100%);
+      --grad-gold: linear-gradient(135deg, #f7d98a 0%, #e0a634 100%);
+
+      /* Safe areas */
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      background: var(--bg-base);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.5;
+      letter-spacing: -0.005em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior-y: contain;
+    }
+    /* Subtle ambient gradient on the canvas — gives the app depth without being noisy */
+    body {
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(124,92,255,0.12), transparent 60%),
+        radial-gradient(900px 500px at -10% 20%, rgba(91,140,255,0.10), transparent 60%),
+        radial-gradient(800px 400px at 50% 110%, rgba(192,132,252,0.08), transparent 60%),
+        var(--bg-base);
+      background-attachment: fixed;
+    }
+    button, input, textarea, select {
+      font: inherit; color: inherit;
+    }
+    button { font-family: var(--font-body); }
+    a { color: var(--accent-soft); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+    h1, h2, h3 { letter-spacing: -0.022em; }
+    ::selection { background: rgba(124,92,255,0.4); color: white; }
+
+    /* App shell */
+    #root { min-height: 100%; padding-top: var(--safe-top); padding-bottom: calc(88px + var(--safe-bottom)); }
+    .topbar {
+      position: sticky; top: 0; z-index: 5;
+      background: rgba(7, 10, 18, 0.7);
+      backdrop-filter: saturate(160%) blur(20px);
+      -webkit-backdrop-filter: saturate(160%) blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: calc(12px + var(--safe-top)) 16px 12px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .topbar h1 {
+      font-size: 17px; margin: 0; flex: 1;
+      font-weight: 700; letter-spacing: -0.01em;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .topbar h1 .logo { width: 28px; height: 28px; flex: 0 0 auto; filter: drop-shadow(0 2px 6px rgba(124,92,255,0.4)); }
+    .brand-mark { width: 96px; height: 96px; filter: drop-shadow(0 16px 28px rgba(124,92,255,0.45)); }
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 36px; font-weight: 700; letter-spacing: -0.03em;
+      background: linear-gradient(120deg, #fff 0%, #d6dcff 40%, #d0baff 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .topbar .icon-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      padding: 0;
+      color: var(--text);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: background var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+    }
+    .topbar .icon-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.08); }
+    .container { padding: 18px 16px; max-width: 720px; margin: 0 auto; }
+
+    /* Bottom tab bar */
+    .tabbar {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      background: rgba(7, 10, 18, 0.78);
+      backdrop-filter: saturate(160%) blur(22px);
+      -webkit-backdrop-filter: saturate(160%) blur(22px);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+      padding: 8px 0 var(--safe-bottom);
+      z-index: 10;
+    }
+    .tabbar button {
+      background: none; border: none;
+      padding: 8px 4px 6px;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      color: var(--muted-2);
+      font-size: 11px; font-weight: 600; letter-spacing: -0.01em;
+      transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+      position: relative;
+    }
+    .tabbar button:active { transform: scale(0.94); }
+    .tabbar button.active { color: var(--accent-soft); }
+    .tabbar button.active::before {
+      content: ''; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 22px; height: 3px; border-radius: 0 0 4px 4px;
+      background: var(--grad-magic);
+    }
+    .tabbar .ic { font-size: 22px; line-height: 1; transition: transform var(--t-base) var(--ease-spring); }
+    .tabbar button.active .ic { transform: translateY(-1px) scale(1.05); }
+
+    /* Buttons */
+    .btn {
+      position: relative;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 13px 18px;
+      border-radius: var(--radius);
+      font-weight: 600; font-size: 15px;
+      letter-spacing: -0.01em;
+      cursor: pointer; user-select: none;
+      transition: transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+      width: 100%;
+      box-shadow: var(--shadow-1);
+    }
+    .btn:hover { border-color: var(--surface-3); }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:disabled:active { transform: none; }
+    .btn.primary {
+      background: linear-gradient(180deg, #6398ff 0%, #4f7cf2 100%);
+      border-color: rgba(255,255,255,0.12);
+      color: white;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset, 0 8px 18px -8px rgba(91,140,255,0.6), var(--shadow-1);
+    }
+    .btn.primary:hover { filter: brightness(1.05); }
+    .btn.primary:disabled { background: var(--surface-2); border-color: var(--border); color: var(--muted); box-shadow: var(--shadow-1); }
+    .btn.ghost { background: transparent; box-shadow: none; }
+    .btn.ghost:hover { background: rgba(255,255,255,0.03); }
+    .btn.danger { background: transparent; border-color: rgba(239,68,68,0.5); color: var(--bad); box-shadow: none; }
+    .btn.danger:hover { background: rgba(239,68,68,0.06); }
+    .btn.small { padding: 9px 14px; font-size: 13px; width: auto; border-radius: 12px; }
+    .btn.row { width: auto; }
+
+    /* Inputs */
+    .input, .textarea, .select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 13px 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+      font-size: 15px;
+      letter-spacing: -0.005em;
+    }
+    .input::placeholder, .textarea::placeholder { color: var(--muted-2); }
+    .input:hover, .textarea:hover, .select:hover { border-color: var(--surface-3); }
+    .input:focus, .textarea:focus, .select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(91,140,255,0.18);
+      background: var(--surface-2);
+    }
+    .textarea { min-height: 110px; resize: vertical; line-height: 1.55; }
+    .select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+    }
+    label.field { display: block; margin-bottom: 14px; }
+    label.field > .lbl {
+      display: block; font-size: 12px; color: var(--muted);
+      margin-bottom: 7px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    /* Cards */
+    .card {
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-1);
+      transition: border-color var(--t-base) var(--ease), transform var(--t-base) var(--ease);
+    }
+    .card h3 { margin: 0 0 8px; font-size: 16px; font-weight: 700; letter-spacing: -0.015em; }
+    .card p.muted { color: var(--muted); margin: 0; font-size: 14px; line-height: 1.55; }
+
+    /* Photo strip */
+    .photo-strip {
+      display: flex; gap: 10px; overflow-x: auto;
+      padding: 4px 0 8px;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+      margin: 0 -4px;
+      padding-left: 4px; padding-right: 4px;
+    }
+    .photo-strip::-webkit-scrollbar { display: none; }
+    .photo-tile {
+      position: relative;
+      flex: 0 0 auto;
+      width: 144px; height: 144px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: repeating-conic-gradient(#1a2238 0% 25%, #232c44 0% 50%) 50%/16px 16px;
+      border: 1px solid var(--border);
+      scroll-snap-align: start;
+      box-shadow: var(--shadow-1);
+    }
+    .photo-tile img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-tile .x {
+      position: absolute; top: 6px; right: 6px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px; width: 28px; height: 28px;
+      font-size: 14px; font-weight: 700;
+      transition: background var(--t-fast) var(--ease);
+    }
+    .photo-tile .x:hover { background: rgba(239,68,68,0.85); }
+    .photo-tile .badge {
+      position: absolute; bottom: 8px; left: 8px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      color: white;
+      font-size: 11px; font-weight: 600;
+      padding: 4px 8px; border-radius: 6px;
+      letter-spacing: 0.02em;
+    }
+    .add-tile {
+      flex: 0 0 auto;
+      width: 144px; height: 144px;
+      border-radius: var(--radius);
+      border: 2px dashed var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 13px; font-weight: 600;
+      flex-direction: column; gap: 6px;
+      background: rgba(255,255,255,0.01);
+      transition: border-color var(--t-base) var(--ease), background var(--t-base) var(--ease), color var(--t-base) var(--ease), transform var(--t-fast) var(--ease);
+    }
+    .add-tile:hover { border-color: var(--accent); color: var(--accent-soft); background: rgba(91,140,255,0.05); }
+    .add-tile:active { transform: scale(0.97); }
+
+    /* Drafts list */
+    .draft-row {
+      display: flex; gap: 14px; align-items: center;
+      padding: 12px;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+      box-shadow: var(--shadow-1);
+    }
+    .draft-row:hover { border-color: var(--surface-3); transform: translateY(-1px); box-shadow: var(--shadow-2); }
+    .draft-row:active { transform: scale(0.99); }
+    .draft-row .thumb {
+      width: 64px; height: 64px; border-radius: 12px;
+      background: var(--surface-2);
+      overflow: hidden; flex: 0 0 auto;
+      box-shadow: var(--shadow-1);
+    }
+    .draft-row .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .draft-row .meta { flex: 1; min-width: 0; }
+    .draft-row .ttl {
+      font-weight: 600; font-size: 15px; margin: 0 0 4px;
+      letter-spacing: -0.012em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .draft-row .sub { color: var(--muted); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+    .draft-row .chev { color: var(--muted-2); font-size: 22px; line-height: 1; }
+
+    /* Tags / badges */
+    .tag { display: inline-block; padding: 3px 8px; border-radius: 999px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      color: var(--muted); font-size: 12px; margin: 2px 4px 2px 0; }
+
+    /* Chat */
+    .chat-log { max-height: 50vh; overflow-y: auto; padding-right: 4px; }
+    .msg { margin: 6px 0; padding: 10px 12px; border-radius: 12px; max-width: 85%; line-height: 1.4; }
+    .msg.buyer { background: var(--surface-2); border: 1px solid var(--border); }
+    .msg.you { background: var(--accent); color: white; margin-left: auto; }
+    .msg .label { font-size: 11px; color: var(--muted); margin-bottom: 2px; font-weight: 600; }
+    .msg.you .label { color: rgba(255,255,255,0.8); }
+
+    /* Toast */
+    .toast {
+      position: fixed; left: 50%; bottom: calc(110px + var(--safe-bottom));
+      transform: translateX(-50%) translateY(0);
+      background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
+      border: 1px solid var(--border);
+      padding: 11px 16px; border-radius: 12px;
+      box-shadow: var(--shadow-3);
+      z-index: 100; max-width: 90vw;
+      font-size: 14px; font-weight: 500;
+      letter-spacing: -0.01em;
+      animation: toast-in var(--t-slow) var(--ease-spring);
+    }
+    @keyframes toast-in {
+      from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    .toast.good { border-color: rgba(74,222,128,0.35); box-shadow: var(--shadow-3), 0 0 0 1px rgba(74,222,128,0.15); }
+    .toast.bad { border-color: rgba(239,68,68,0.4); box-shadow: var(--shadow-3), 0 0 0 1px rgba(239,68,68,0.15); }
+
+    /* Spinner (legacy, mostly replaced by .genie-think) */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Genie thinking — animated sparkle + label */
+    .genie-think {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-weight: 600;
+    }
+    .genie-think .spark {
+      display: inline-block;
+      animation: spark-pulse 1.4s ease-in-out infinite;
+      transform-origin: center;
+    }
+    @keyframes spark-pulse {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      30% { transform: scale(1.25) rotate(15deg); opacity: 0.85; }
+      60% { transform: scale(0.9) rotate(-10deg); opacity: 1; }
+    }
+    .genie-think .text {
+      background: linear-gradient(110deg, rgba(255,255,255,0.7) 30%, white 50%, rgba(255,255,255,0.7) 70%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: think-shimmer 2s linear infinite;
+    }
+    @keyframes think-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* Sparkle particle utility — for AI generate moments */
+    .sparkles {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 200;
+    }
+    .sparkles .sp {
+      position: absolute;
+      width: 14px; height: 14px;
+      animation: sparkle-fade 1.4s ease-out forwards;
+    }
+    @keyframes sparkle-fade {
+      0% { transform: scale(0) rotate(0deg); opacity: 0; }
+      30% { transform: scale(1) rotate(120deg); opacity: 1; }
+      100% { transform: scale(0.4) rotate(360deg) translateY(-30px); opacity: 0; }
+    }
+
+    /* Floating brand logo on welcome */
+    .float-logo {
+      animation: float-genie 4.5s ease-in-out infinite;
+      will-change: transform;
+    }
+    @keyframes float-genie {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Page enter animation — applied to .container on view changes */
+    .page-enter {
+      animation: page-fade-in var(--t-slow) var(--ease) both;
+    }
+    @keyframes page-fade-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Loading skeleton */
+    .skel {
+      background: linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 50%, var(--surface) 100%);
+      background-size: 200% 100%;
+      animation: skel-shimmer 1.6s linear infinite;
+      border-radius: var(--radius-sm);
+    }
+    @keyframes skel-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Marketplace grid */
+    .market-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .market-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .market-btn .name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+    .market-btn .hint { color: var(--muted); font-size: 12px; }
+
+    /* Misc */
+    .row { display: flex; gap: 10px; align-items: center; }
+    .row.between { justify-content: space-between; }
+    .stack { display: flex; flex-direction: column; gap: 10px; }
+    .center { text-align: center; }
+    .muted { color: var(--muted); }
+    .small { font-size: 13px; }
+    .price { font-size: 22px; font-weight: 700; }
+    hr.sep { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+    .empty {
+      text-align: center;
+      padding: 60px 16px 40px;
+      color: var(--muted);
+      animation: page-fade-in var(--t-slow) var(--ease) both;
+    }
+    .empty .big {
+      font-size: 56px; margin-bottom: 12px;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+      animation: float-genie 4s ease-in-out infinite;
+    }
+    .empty .ttl { font-weight: 700; font-size: 18px; color: var(--text); margin-bottom: 4px; letter-spacing: -0.015em; }
+    .empty .sub { font-size: 14px; max-width: 280px; margin: 0 auto; }
+
+    /* Pickable cards (category + item type) */
+    .pick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 480px) {
+      .pick-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .pick-card {
+      position: relative;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 12px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: transform var(--t-fast) var(--ease), border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease), background var(--t-base) var(--ease);
+      box-shadow: var(--shadow-1);
+      overflow: hidden;
+    }
+    .pick-card::after {
+      content: ''; position: absolute; inset: 0;
+      background: var(--grad-magic-soft);
+      opacity: 0; transition: opacity var(--t-base) var(--ease);
+      pointer-events: none;
+    }
+    .pick-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-2); }
+    .pick-card:hover::after { opacity: 1; }
+    .pick-card:active { transform: scale(0.97); }
+    .pick-card .em {
+      font-size: 30px; line-height: 1;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+      transition: transform var(--t-base) var(--ease-spring);
+      position: relative; z-index: 1;
+    }
+    .pick-card:hover .em { transform: scale(1.1) rotate(-4deg); }
+    .pick-card .lbl { font-size: 13px; font-weight: 600; line-height: 1.25; position: relative; z-index: 1; }
+
+    /* Step header (shows progress through the new-listing flow) */
+    .stepbar {
+      display: flex; gap: 6px;
+      margin-bottom: 18px;
+    }
+    .stepbar .pip {
+      flex: 1; height: 4px;
+      background: var(--surface);
+      border-radius: 2px;
+      transition: background var(--t-slow) var(--ease);
+    }
+    .stepbar .pip.done { background: var(--accent); }
+    .stepbar .pip.current {
+      background: var(--grad-magic);
+      background-size: 200% 100%;
+      animation: shimmer 2.4s linear infinite;
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 28px; font-weight: 700; margin: 0 0 6px;
+      letter-spacing: -0.03em; line-height: 1.15;
+    }
+    .step-sub { color: var(--muted); margin: 0 0 20px; font-size: 15px; line-height: 1.5; }
+
+    /* Welcome slides */
+    .welcome-card {
+      position: relative;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-2);
+    }
+    .welcome-card::before {
+      content: ''; position: absolute; top: -30%; right: -20%;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(124,92,255,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .welcome-card .num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--grad-magic);
+      color: white;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 15px;
+      margin-bottom: 12px;
+      box-shadow: 0 6px 18px -6px rgba(124,92,255,0.6);
+      position: relative; z-index: 1;
+    }
+    .welcome-card h3 {
+      margin: 0 0 8px; font-size: 18px; font-weight: 700;
+      letter-spacing: -0.02em;
+      position: relative; z-index: 1;
+    }
+    .welcome-card p {
+      margin: 0; color: var(--text-2); font-size: 14.5px; line-height: 1.55;
+      position: relative; z-index: 1;
+    }
+
+    /* Tip card (shown above photo upload to guide the user) */
+    .tip-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(91,140,255,0.08) 0%, rgba(124,92,255,0.06) 100%);
+      border: 1px solid rgba(91,140,255,0.25);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .tip-card strong { color: var(--accent-soft); font-weight: 700; }
+    .tip-card ul { margin: 6px 0 0; padding-left: 20px; }
+    .tip-card li { margin-bottom: 2px; }
+
+    /* Status badges */
+    .status {
+      display: inline-flex;
+      align-items: center; gap: 5px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .status::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: currentColor; opacity: 0.8;
+    }
+    .status.draft { background: rgba(138,150,172,0.15); color: var(--muted); border: 1px solid var(--border); }
+    .status.posted { background: rgba(79,140,255,0.15); color: var(--accent); border: 1px solid rgba(79,140,255,0.3); }
+    .status.sold { background: rgba(34,197,94,0.15); color: var(--good); border: 1px solid rgba(34,197,94,0.3); }
+    .status.removed { background: rgba(239,68,68,0.1); color: var(--bad); border: 1px solid rgba(239,68,68,0.25); }
+
+    /* Listing-health progress ring */
+    .health-ring {
+      width: 88px; height: 88px;
+      flex: 0 0 auto;
+      position: relative;
+    }
+    .health-ring svg { transform: rotate(-90deg); }
+    .health-ring .track { stroke: var(--surface-2); }
+    .health-ring .bar { stroke: var(--good); transition: stroke-dashoffset 0.6s ease; }
+    .health-ring.warn .bar { stroke: var(--warn); }
+    .health-ring.bad .bar { stroke: var(--bad); }
+    .health-ring .num {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 22px;
+    }
+
+    /* Stats hero on home */
+    .stats-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .stat-tile {
+      position: relative;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      text-align: center;
+      overflow: hidden;
+      box-shadow: var(--shadow-1);
+    }
+    .stat-tile::before {
+      content: ''; position: absolute; top: -40%; left: -20%;
+      width: 140%; height: 80%;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .stat-tile .v {
+      font-family: var(--font-display);
+      font-size: 26px; font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .stat-tile .l { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; font-weight: 700; }
+    .stat-tile.profit .v {
+      background: linear-gradient(120deg, #4ade80 0%, #22c55e 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-tile.streak .v {
+      background: var(--grad-magic);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Sales dashboard */
+    .sales-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .sales-card h3 { margin: 0 0 4px; font-size: 16px; }
+    .sales-card .muted { font-size: 13px; }
+    .platform-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 6px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      font-size: 12px; font-weight: 600;
+      margin: 2px 4px 2px 0;
+    }
+
+    /* Action chips (for post-status quick actions) */
+    .chip-row {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 13px; font-weight: 600;
+      cursor: pointer;
+    }
+    .chip:hover { border-color: var(--accent); }
+    .chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .chip.success { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.4); color: var(--good); }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(3, 5, 12, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 50;
+      display: flex; align-items: flex-end; justify-content: center;
+      animation: fadeIn var(--t-base) var(--ease);
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal {
+      width: 100%; max-width: 600px;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 22px 22px 0 0;
+      padding: 24px 20px calc(24px + var(--safe-bottom));
+      max-height: 90vh; overflow-y: auto;
+      animation: slideUp var(--t-slow) var(--ease-spring);
+      box-shadow: var(--shadow-3);
+    }
+    @keyframes slideUp { from { transform: translateY(60px); } to { transform: translateY(0); } }
+    .modal h3 { margin: 0 0 8px; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+    /* Modal grabber handle */
+    .modal::before {
+      content: ''; display: block;
+      width: 40px; height: 4px; border-radius: 2px;
+      background: var(--surface-3);
+      margin: -8px auto 16px;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed; left: 0; right: 0; top: 0; height: 100vh;
+      pointer-events: none; z-index: 200; overflow: hidden;
+    }
+    .confetti span {
+      position: absolute;
+      top: -20px;
+      width: 9px; height: 14px;
+      animation: confetti-fall 1.6s ease-out forwards;
+      opacity: 0.95;
+    }
+    @keyframes confetti-fall {
+      0% { transform: translateY(0) rotate(0); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* "Magic" pulse used on AI-action buttons */
+    .magic, .btn.primary.magic {
+      background: linear-gradient(110deg, #5b8cff 0%, #7c5cff 35%, #c084fc 65%, #7c5cff 100%);
+      background-size: 250% 100%;
+      animation: shimmer 4.5s linear infinite;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.22) inset, 0 10px 30px -10px rgba(124,92,255,0.7), var(--shadow-1);
+    }
+    .magic:hover, .btn.primary.magic:hover { filter: brightness(1.05); }
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 250% 50%; }
+    }
+
+    /* Hide native file inputs */
+    input[type=file] { display: none; }
+  </style>
+</head>
+<body>
+  <main id="root">
+    <div style="min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; color: #8b95ad;">
+      <div style="font-size: 60px; animation: float-genie 3s ease-in-out infinite; filter: drop-shadow(0 16px 28px rgba(124,92,255,0.5));">🪔</div>
+      <div style="font-family: 'Fraunces', serif; font-weight: 700; font-size: 28px; color: #eef2fb; margin: 16px 0 4px; letter-spacing: -0.02em;">Sales Genie</div>
+      <div style="font-size: 13px; opacity: 0.7;">summoning…</div>
+    </div>
+  </main>
+
+  <!-- Error catcher so a black screen tells you what's wrong -->
+  <script>
+    function showFatal(msg, detail) {
+      const root = document.getElementById('root');
+      if (!root) return;
+      root.innerHTML = `
+        <div style="padding: 30px 20px; max-width: 560px; margin: 0 auto; color: #e6edf6;">
+          <div style="font-size: 36px; margin-bottom: 10px;">😬</div>
+          <h2 style="margin: 0 0 8px;">Something didn't load.</h2>
+          <p style="color: #8a96ac; line-height: 1.5;">${msg}</p>
+          ${detail ? `<pre style="background:#1a2233; border:1px solid #2c3651; border-radius:10px; padding:12px; font-size:12px; overflow:auto; white-space:pre-wrap; word-break: break-word; color:#c5d4ff;">${detail}</pre>` : ''}
+          <p style="color: #8a96ac; font-size: 13px; margin-top: 14px; line-height: 1.5;">
+            Most common cause: opening this file directly from your computer (a <code>file://</code> URL) instead of through a web server.
+            Modern browsers block module imports under <code>file://</code>.<br><br>
+            Fixes: deploy to Vercel/Netlify (free) and open the resulting HTTPS URL on your phone, OR run <code>npm start</code> in the folder and open the printed URL.
+          </p>
+        </div>
+      `;
+    }
+    window.addEventListener('error', (e) => {
+      const msg = (e.message || 'Unknown error') + (e.filename ? ` — ${e.filename}:${e.lineno || '?'}` : '');
+      showFatal('A script error stopped the app from starting.', msg);
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+      const reason = e.reason instanceof Error ? `${e.reason.name}: ${e.reason.message}` : String(e.reason);
+      showFatal('An async error stopped the app from starting.', reason);
+    });
+  </script>
+
+  <script type="module">
+    // localForage is lightweight and reliable on jsdelivr.
+    // The background-removal library is heavy (~80MB model + ONNX runtime) so we
+    // load it ONLY when the user actually taps "Clean up backgrounds." That way a
+    // bad CDN response or a slow network doesn't prevent the rest of the app from
+    // booting.
+    import localforage from 'https://cdn.jsdelivr.net/npm/localforage@1.10.0/+esm';
+
+    let _removeBackground = null;
+    async function ensureBgRemoval() {
+      if (_removeBackground) return _removeBackground;
+      try {
+        const mod = await import('https://esm.sh/@imgly/background-removal@1.4.5');
+        _removeBackground = mod.removeBackground || mod.default?.removeBackground;
+        if (!_removeBackground) throw new Error('removeBackground export not found');
+        return _removeBackground;
+      } catch (err) {
+        throw new Error('Couldn\'t load the background-removal library. ' + (err.message || err));
+      }
+    }
+
+    // ============================================================
+    // Brand
+    // ============================================================
+    function logoSvg(size = 'logo') {
+      // 'logo' (small, top bar) or 'brand-mark' (big, welcome).
+      // Genie emerging from a magic lamp, purple-blue gradient backdrop.
+      return `
+        <svg class="${size}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="Sales Genie">
+          <defs>
+            <linearGradient id="bg-${size}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#6d5cff" />
+              <stop offset="1" stop-color="#4f8cff" />
+            </linearGradient>
+            <linearGradient id="lamp-${size}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f7e08a" />
+              <stop offset="1" stop-color="#d8a83a" />
+            </linearGradient>
+            <radialGradient id="smoke-${size}" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="white" stop-opacity="0.95" />
+              <stop offset="1" stop-color="white" stop-opacity="0.05" />
+            </radialGradient>
+          </defs>
+          <rect width="64" height="64" rx="14" fill="url(#bg-${size})" />
+          <!-- stars -->
+          <circle cx="14" cy="14" r="1.2" fill="white" opacity="0.7" />
+          <circle cx="50" cy="10" r="1.4" fill="white" opacity="0.5" />
+          <circle cx="54" cy="22" r="1" fill="white" opacity="0.6" />
+          <!-- smoke / genie body -->
+          <path d="M28 38 Q22 30 26 22 Q31 18 36 22 Q40 28 36 32 Q33 35 32 38 Z" fill="url(#smoke-${size})" />
+          <circle cx="33" cy="22" r="2" fill="white" opacity="0.7" />
+          <!-- lamp body -->
+          <path d="M18 46 Q18 40 24 38 L40 38 Q46 40 46 46 L44 48 L20 48 Z" fill="url(#lamp-${size})" />
+          <ellipse cx="32" cy="38" rx="11" ry="2" fill="#b8862c" opacity="0.7" />
+          <!-- spout -->
+          <path d="M44 42 Q50 40 50 44 Q48 45 44 45 Z" fill="url(#lamp-${size})" />
+          <!-- handle -->
+          <path d="M20 42 Q14 42 16 46" stroke="#b8862c" stroke-width="1.6" fill="none" stroke-linecap="round" />
+        </svg>
+      `;
+    }
+
+    // ============================================================
+    // Storage
+    // ============================================================
+    const draftsStore = localforage.createInstance({ name: 'crosslist', storeName: 'drafts' });
+    const photosStore = localforage.createInstance({ name: 'crosslist', storeName: 'photos' });
+
+    // localStorage for small settings (API key, prefs)
+    const settings = {
+      get apiKey() { return localStorage.getItem('claude_api_key') || ''; },
+      set apiKey(v) { localStorage.setItem('claude_api_key', v); },
+      get model() { return localStorage.getItem('claude_model') || 'claude-sonnet-4-6'; },
+      set model(v) { localStorage.setItem('claude_model', v); },
+      get sellerLocation() { return localStorage.getItem('seller_location') || ''; },
+      set sellerLocation(v) { localStorage.setItem('seller_location', v); },
+    };
+
+    async function listDrafts() {
+      const drafts = [];
+      await draftsStore.iterate((v) => { drafts.push(v); });
+      return drafts.sort((a, b) => b.updatedAt - a.updatedAt);
+    }
+    async function getDraft(id) { return await draftsStore.getItem(id); }
+    async function saveDraft(draft) {
+      draft.updatedAt = Date.now();
+      await draftsStore.setItem(draft.id, draft);
+      return draft;
+    }
+    async function deleteDraft(id) {
+      const d = await getDraft(id);
+      if (d?.photoIds) {
+        for (const pid of d.photoIds) {
+          photoUrlCache.revokePersisted(pid);
+          await photosStore.removeItem(pid);
+        }
+      }
+      await draftsStore.removeItem(id);
+    }
+    async function savePhoto(blob) {
+      const id = 'p_' + Math.random().toString(36).slice(2, 10);
+      await photosStore.setItem(id, blob);
+      return id;
+    }
+    async function getPhoto(id) { return await photosStore.getItem(id); }
+
+    // ============================================================
+    // Photo URL cache — prevents URL.createObjectURL leaks across re-renders.
+    // Keyed by IndexedDB photoId for persisted photos, and by a stable index
+    // for in-session blobs. Call clearPhotoUrlCache() when the active set changes
+    // (different draft opened, session reset, draft deleted).
+    // ============================================================
+    const photoUrlCache = {
+      _persisted: new Map(), // photoId -> { blob, url }
+      _session: new Map(),   // index -> { blob, url } (matches state.session.photoBlobs slot+kind)
+      async forPhotoId(photoId) {
+        const hit = this._persisted.get(photoId);
+        if (hit) return hit.url;
+        const blob = await getPhoto(photoId);
+        if (!blob) return null;
+        const url = URL.createObjectURL(blob);
+        this._persisted.set(photoId, { blob, url });
+        return url;
+      },
+      forSessionPhoto(idx, blob) {
+        const key = `${idx}:${blob === null ? 'n' : blob.size}-${blob === null ? 0 : blob.lastModified || 0}`;
+        const hit = this._session.get(idx);
+        if (hit && hit.key === key) return hit.url;
+        if (hit) { try { URL.revokeObjectURL(hit.url); } catch {} }
+        const url = URL.createObjectURL(blob);
+        this._session.set(idx, { url, key });
+        return url;
+      },
+      revokePersisted(photoId) {
+        const hit = this._persisted.get(photoId);
+        if (hit) { try { URL.revokeObjectURL(hit.url); } catch {} }
+        this._persisted.delete(photoId);
+      },
+      clearPersisted() {
+        for (const { url } of this._persisted.values()) { try { URL.revokeObjectURL(url); } catch {} }
+        this._persisted.clear();
+      },
+      clearSession() {
+        for (const { url } of this._session.values()) { try { URL.revokeObjectURL(url); } catch {} }
+        this._session.clear();
+      },
+      clearAll() { this.clearPersisted(); this.clearSession(); },
+    };
+
+    // ============================================================
+    // Image utilities
+    // ============================================================
+    async function fileToBlob(file) { return file; }
+
+    // Resize an image blob to maxDim on the longest side (keeps aspect).
+    // Returns a JPEG blob to keep payloads small.
+    async function resizeImage(blob, maxDim = 1280, quality = 0.85) {
+      const img = await blobToImage(blob);
+      const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      return await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality));
+    }
+
+    function blobToImage(blob) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+        img.onerror = (e) => { URL.revokeObjectURL(url); reject(e); };
+        img.src = url;
+      });
+    }
+
+    function blobToDataUrl(blob) {
+      return new Promise((resolve, reject) => {
+        const fr = new FileReader();
+        fr.onload = () => resolve(fr.result);
+        fr.onerror = reject;
+        fr.readAsDataURL(blob);
+      });
+    }
+
+    // Compose the cutout (PNG with transparency) on top of a solid color background.
+    async function compositeOnColor(cutoutBlob, color = '#ffffff') {
+      const img = await blobToImage(cutoutBlob);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width; canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      return await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.92));
+    }
+
+    // ============================================================
+    // Claude API (called directly from browser)
+    // ============================================================
+    // Returns true if the user has a key. If not, toasts + sends them to Settings
+    // and returns false so callers can short-circuit.
+    function requireApiKey() {
+      if (settings.apiKey) return true;
+      toast('Add your Claude API key in Settings first.', 'bad', 3500);
+      setView('settings');
+      return false;
+    }
+
+    async function callClaude({ system, messages, maxTokens = 1500 }) {
+      if (!settings.apiKey) throw new Error('Claude API key not set. Open Settings to add it.');
+      let res;
+      try {
+        res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            'x-api-key': settings.apiKey,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true',
+          },
+          body: JSON.stringify({
+            model: settings.model,
+            max_tokens: maxTokens,
+            system,
+            messages,
+          }),
+        });
+      } catch (netErr) {
+        // fetch only rejects on network errors / CORS / aborts.
+        throw new Error("Couldn't reach Claude. Check your internet connection and try again.");
+      }
+      if (!res.ok) {
+        const text = await res.text();
+        let detail = '';
+        try { detail = JSON.parse(text).error?.message || ''; } catch {}
+        if (res.status === 401) throw new Error('Your Claude API key was rejected. Update it in Settings.');
+        if (res.status === 429) throw new Error("Claude is rate-limited right now. Wait a bit and try again.");
+        if (res.status === 529 || res.status === 503) throw new Error('Claude is temporarily overloaded. Try again in a moment.');
+        if (res.status >= 500) throw new Error(`Claude had a problem (${res.status}). Try again in a moment.`);
+        throw new Error(detail || `Claude API error (${res.status})`);
+      }
+      const json = await res.json();
+      return json.content?.map((c) => c.text).join('\n') || '';
+    }
+
+    // Pull the first ```json block, or fall back to the whole text.
+    function extractJson(text) {
+      const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/```\s*([\s\S]*?)```/);
+      const candidate = m ? m[1] : text;
+      // Trim leading prose if any:
+      const start = candidate.indexOf('{');
+      const end = candidate.lastIndexOf('}');
+      if (start === -1 || end === -1) throw new Error('Could not find JSON in response');
+      return JSON.parse(candidate.slice(start, end + 1));
+    }
+
+    async function generateListing({ photoBlobs, hints, categoryLabel, itemLabel }) {
+      // Resize and convert each photo to base64 for the vision API
+      const imageBlocks = [];
+      for (const blob of photoBlobs) {
+        const resized = await resizeImage(blob, 1280, 0.85);
+        const dataUrl = await blobToDataUrl(resized);
+        const base64 = dataUrl.split(',')[1];
+        imageBlocks.push({
+          type: 'image',
+          source: { type: 'base64', media_type: 'image/jpeg', data: base64 },
+        });
+      }
+
+      const system = `You write listings for items being sold on platforms like eBay, Facebook Marketplace, OfferUp, Craigslist, and Nextdoor.
+
+Your listings sound like a real person wrote them — clear, honest, scannable, with specific details a buyer would care about. You point out flaws you can see in the photos rather than hiding them. You don't use clickbait, ALL CAPS, or salesy fluff.
+
+You ALWAYS respond with a single JSON object inside a \`\`\`json ... \`\`\` code block. No prose outside the block.`;
+
+      const ctxLines = [];
+      if (categoryLabel) ctxLines.push(`Category the seller picked: ${categoryLabel}`);
+      if (itemLabel) ctxLines.push(`Item type the seller picked: ${itemLabel}`);
+      const ctx = ctxLines.length ? `\n${ctxLines.join('\n')}\n` : '';
+
+      const userText = `Look at these photos of an item I want to sell and write the listing.
+${ctx}
+${hints ? `My hints / extra info:\n${hints}\n\n` : ''}Return JSON with this exact shape:
+{
+  "title": string (max 80 chars, search-friendly, includes brand/model if visible),
+  "description": string (3 to 6 short paragraphs OR a short intro plus a bullet list — your call based on the item; cover what it is, condition with specifics, dimensions/specs if you can estimate, what's included, any flaws visible in photos),
+  "category": string (broad > narrow, e.g. "Furniture > Sofas" or "Electronics > Cell Phones"),
+  "condition": "new" | "like_new" | "used_good" | "used_fair" | "for_parts",
+  "suggestedPriceUSD": { "low": number|null, "fair": number|null, "high": number|null },
+  "tags": string[] (5 to 10 short tags, lowercase),
+  "flagsForUser": string[] (things I should add or verify before posting — e.g. "Add the model number from the back if you have it", "I couldn't see the back from these photos — note any damage")
+}
+
+If you genuinely can't tell what the item is, set price values to null and explain in flagsForUser.`;
+
+      const text = await callClaude({
+        system,
+        maxTokens: 2000,
+        messages: [{
+          role: 'user',
+          content: [...imageBlocks, { type: 'text', text: userText }],
+        }],
+      });
+      return extractJson(text);
+    }
+
+    // The full sales playbook. Tuned for marketplace-style buyer messages.
+    const CHAT_SYSTEM = `You are a sales co-pilot helping a private seller respond to buyers on eBay, Facebook Marketplace, OfferUp, Craigslist, and Nextdoor. Your job is to help the seller close the sale at the best reasonable price while protecting them from scams and time-wasters.
+
+VOICE
+- Plain-spoken, friendly, confident. Like a person texting, not a customer-service bot.
+- 1-3 sentences for most replies. Use 4-5 only when explaining logistics or describing the item in detail.
+- Never use "Hi there!", "I hope this message finds you well", emojis (unless the buyer used one first), or salesy language.
+- Match the buyer's energy and formality.
+- Match the buyer's language. If they wrote in Spanish, reply in Spanish.
+
+CORE TACTICS
+1. Always answer the question that was asked, before pivoting to anything else.
+2. Use small concrete details from the listing — model number, dimensions, condition specifics. Specifics build trust.
+3. If the buyer asks "is this still available?" reply yes/no in one line and immediately ask one closing question (e.g. "Yes — when could you pick up?").
+4. Treat any reply as a chance to move toward a meeting time + place. Don't just answer and stop.
+5. Don't volunteer flaws the buyer didn't ask about, but never deny one that exists. If the seller flagged a flaw in the listing, acknowledge it honestly when asked.
+6. If the buyer goes silent after expressing interest, suggest a soft re-engage: "Still want this? I have someone else asking but you were first in line."
+
+NEGOTIATION PLAYBOOK
+- Anchor: never accept the first offer. If someone offers asking, say "Yes, when can you pick up?" — don't haggle yourself down.
+- Lowball threshold: more than ~20% below asking is a lowball.
+  - On a lowball: don't get offended. Acknowledge politely, name a counter that's slightly under asking (e.g. asking minus 5-10%), explain briefly why ("similar ones go for $X", "I just dropped the price").
+  - Use scarcity sparingly: "I have a few people interested, so I'm sticking close to asking."
+- Cash-is-king discount: if the buyer is local and paying cash, a small discount (5-10%) is fine.
+- Bundle: if the seller has other listings the buyer might want, suggest bundling for a discount.
+- Walk away: if the buyer keeps lowballing, end politely: "Appreciate the offer — I'll keep it listed for now. Let me know if you change your mind."
+
+LOGISTICS
+- Pickup default. Don't ship unless the listing explicitly offers shipping.
+- Suggest a public meeting spot for higher-value items: "There's a Starbucks parking lot near me, works for both of us?"
+- Don't share the seller's home address until the buyer has committed to a specific pickup window.
+- Payment: cash on pickup, or platform-native payment (eBay Managed Payments, FB Marketplace's payment, Venmo for trusted platforms). NEVER Zelle/Cash App/Wire from people you haven't met. NEVER checks. NEVER pay-then-ship without platform escrow.
+
+SCAM DETECTION (if you see any of these, warn the seller in [brackets] at the END of your reply, and draft a polite decline as the reply itself)
+- "I'll send my agent / shipping company to pick up"
+- "I'll pay extra if you ship"
+- Asking for the seller's phone number to "verify" with a code (Google Voice scam — the code lets them set up an account in your name)
+- Wanting to pay via wire, gift cards, Western Union, crypto
+- Pushing the seller to a different platform / messaging app immediately
+- Offering more than asking with no negotiation
+- "Lost my password, can you log in for me", anything that asks for credentials
+- Buyer's profile is brand new with no history (if you can tell)
+
+SAFETY ADVICE (deliver in [brackets] after the reply, not in the reply itself)
+- For high-value items meeting in person, suggest the seller bring someone with them or use a police-station "safe trade zone" (most cities have them).
+- Remind the seller to wait for cash to be in hand or platform payment to clear before handing over the item.
+
+OUTPUT FORMAT
+Always output JSON in a \`\`\`json block, with this shape:
+{
+  "reply": string,            // the actual reply text the seller can send as-is
+  "intent": "available_q" | "details_q" | "price_offer" | "lowball" | "scam_suspected" | "logistics" | "going_silent" | "ghosting_recovery" | "small_talk" | "other",
+  "notes": string,            // 1-2 sentence private note to the seller — what you noticed, what's the play, what to watch for. Empty string if nothing to flag.
+  "suggested_followups": string[]   // up to 3 short labels for next-step replies the seller might want, e.g. "Confirm pickup time", "Counter at $X", "Decline politely"
+}
+No prose outside the JSON block.`;
+
+    async function chatReply({ listing, conversation, instruction }) {
+      const priceLine = listing.askingPrice ?? listing.suggestedPriceUSD?.fair ?? 'not set';
+      const flagsBlock = listing.flagsForUser?.length
+        ? `\nKnown caveats the seller noted:\n${listing.flagsForUser.map((f) => '- ' + f).join('\n')}`
+        : '';
+
+      const listingSummary = `=== LISTING ===
+Title: ${listing.title}
+Asking price: $${priceLine}
+Condition: ${listing.condition}
+Category: ${listing.category || 'unspecified'}
+Description:
+${listing.description}${flagsBlock}
+=== END LISTING ===`;
+
+      const convoText = conversation.length === 0
+        ? '(No messages yet.)'
+        : conversation.map((m) => `${m.from === 'buyer' ? 'BUYER' : 'SELLER (you)'}: ${m.text}`).join('\n');
+
+      const userText = `${listingSummary}
+
+=== CONVERSATION SO FAR ===
+${convoText}
+=== END CONVERSATION ===
+
+${instruction ? `Special instruction from the seller: "${instruction}"\n\n` : ''}Draft the seller's next reply. Output JSON only.`;
+
+      const text = await callClaude({
+        system: CHAT_SYSTEM,
+        messages: [{ role: 'user', content: userText }],
+        maxTokens: 800,
+      });
+      try {
+        return extractJson(text);
+      } catch {
+        // If the model didn't return clean JSON, fall back to plain text
+        return { reply: text.trim(), intent: 'other', notes: '', suggested_followups: [] };
+      }
+    }
+
+    // ============================================================
+    // Marketplace handoff
+    // ============================================================
+    const MARKETS = [
+      { id: 'ebay', name: 'eBay', url: 'https://www.ebay.com/sl/sell',
+        hint: 'Open sell page → paste title + description, upload photos.' },
+      { id: 'facebook', name: 'FB Marketplace', url: 'https://www.facebook.com/marketplace/create/item',
+        hint: 'Open create-item page → paste, upload photos, set category.' },
+      { id: 'offerup', name: 'OfferUp', url: 'https://offerup.com/post/',
+        hint: 'Open post page → paste, upload photos.' },
+      { id: 'craigslist', name: 'Craigslist', url: 'https://post.craigslist.org/',
+        hint: 'Pick your city → for sale → category → paste & upload.' },
+      { id: 'nextdoor', name: 'Nextdoor', url: 'https://nextdoor.com/for_sale_and_free/',
+        hint: 'Tap "+ Post" → For sale → paste & upload photos.' },
+    ];
+
+    // ============================================================
+    // Categories — the guided "what are you selling" picker
+    // ============================================================
+    const CATEGORIES = [
+      { id: 'electronics', label: 'Electronics', em: '📱', items: [
+        { id: 'phone', label: 'Phone', em: '📱',
+          tip: 'Front, back, and sides. Include the screen powered on if you can. A close-up of any cracks, dents, or scuffs builds trust.',
+          ask: 'Brand and model? Storage size? Carrier (or unlocked)? Any cracks or battery issues? Any accessories included?' },
+        { id: 'laptop', label: 'Laptop / PC', em: '💻',
+          tip: 'Photos of the lid, keyboard, screen powered on, ports, and the spec sticker on the bottom (if there is one).',
+          ask: 'Brand and model? Year? RAM, storage, processor if you know? Battery health? Charger included? Any keyboard wear?' },
+        { id: 'tv', label: 'TV', em: '📺',
+          tip: 'Front of the TV powered on, the back showing ports, and any model sticker. Include the remote if you have it.',
+          ask: 'Brand, model, screen size? Smart TV or just the panel? Any dead pixels, scratches? Stand and remote included?' },
+        { id: 'headphones', label: 'Headphones', em: '🎧',
+          tip: 'Both earcups, the headband, the cable/case, any wear on the cushions.',
+          ask: 'Brand and model? Wireless or wired? Battery life if wireless? Any wear on cushions or cable? Case included?' },
+        { id: 'gaming', label: 'Gaming', em: '🎮',
+          tip: 'The console + power cable + controllers, plus any games. Photo of the back showing the model number.',
+          ask: 'Console model and storage? Controllers (how many)? Power cable / HDMI included? Games included? Any disc tray issues?' },
+        { id: 'camera', label: 'Camera', em: '📷',
+          tip: 'Body, lens, sensor (with cap off, in good light), shutter count if you know it.',
+          ask: 'Brand, model, lens kit? Shutter count if you know? Battery + charger + memory card? Any sensor or lens marks?' },
+        { id: 'smartwatch', label: 'Smart watch', em: '⌚',
+          tip: 'Face on/off, back, band, charger.',
+          ask: 'Brand, model, size? GPS or cellular? Original band still on? Battery life how it is? Charger included?' },
+        { id: 'speaker', label: 'Speakers', em: '🔊',
+          tip: 'Front grille, back/ports, any remote, power supply.',
+          ask: 'Brand, model? Wireless / wired? Power cable + remote included? Any tears in the grille or buzz when playing?' },
+        { id: 'electronics_other', label: 'Other electronics', em: '🔌',
+          tip: 'A clean main shot, a model/sticker shot, and any cables.',
+          ask: 'What is it? Brand and model if you know? What\'s included? Tested working?' },
+      ]},
+      { id: 'furniture', label: 'Furniture', em: '🛋️', items: [
+        { id: 'sofa', label: 'Sofa / Couch', em: '🛋️',
+          tip: 'Wide shot from across the room, close-up of the fabric/leather, photos of any tears, stains, or pet damage. Take it WITHOUT cushions on so size is clear.',
+          ask: 'Brand if known? Material? Approximate dimensions (L x W x H)? Any pet hair, smoke, stains? Pickup from inside or curbside?' },
+        { id: 'bed', label: 'Bed / Mattress', em: '🛏️',
+          tip: 'Mattress with sheets off. Frame separate. Note any stains.',
+          ask: 'Size (twin/full/queen/king)? Brand and model? Years used? Any stains, sagging, or smells? Frame included? Disassembly needed for pickup?' },
+        { id: 'chair', label: 'Chair', em: '🪑',
+          tip: 'Multiple angles, close-up of seat fabric and base, any wear.',
+          ask: 'Brand if known? Material? Dimensions? Any tears or wobble?' },
+        { id: 'table', label: 'Table / Desk', em: '🪟',
+          tip: 'Top, base, all four sides. Photo of any nicks or rings on the surface.',
+          ask: 'Brand if known? Material (solid wood / veneer)? Dimensions? Any scratches, water rings, wobbly legs?' },
+        { id: 'dresser', label: 'Dresser / Storage', em: '🗄️',
+          tip: 'All drawers open and closed, each side, the back if accessible.',
+          ask: 'Brand if known? Material? Number of drawers? Any sticking drawers, scuffs, smells?' },
+        { id: 'shelf', label: 'Bookshelf / Cabinet', em: '📚',
+          tip: 'Empty if possible. All sides, close-up of any damage.',
+          ask: 'Brand if known? Material? Dimensions? Adjustable shelves? Any wobble or cracked panels?' },
+        { id: 'furniture_other', label: 'Other furniture', em: '🪑',
+          tip: 'Wide shot + close-ups of any wear or damage.',
+          ask: 'What is it? Material? Dimensions? Any flaws?' },
+      ]},
+      { id: 'clothing', label: 'Clothing', em: '👕', items: [
+        { id: 'mens', label: "Men's clothing", em: '👔',
+          tip: 'Lay flat on a clean background. Tag close-up showing brand + size. Any wear, pilling, or stains.',
+          ask: 'Brand? Size? Material? Any flaws (stains, holes, pilling)?' },
+        { id: 'womens', label: "Women's clothing", em: '👗',
+          tip: 'Lay flat or on a hanger. Tag close-up. Front + back.',
+          ask: 'Brand? Size? Material? Any flaws?' },
+        { id: 'kids', label: "Kids' clothing", em: '👕',
+          tip: 'Tag visible. Note if it\'s a bundle and how many pieces.',
+          ask: 'Brand(s)? Size(s)? Any stains or wear? How many pieces if it\'s a bundle?' },
+        { id: 'shoes', label: 'Shoes', em: '👟',
+          tip: 'Both shoes side and top, soles (wear is a key signal), tag inside the tongue or on the box.',
+          ask: 'Brand and model? Size? How worn? Original box and laces? Any odor?' },
+        { id: 'bag', label: 'Bag / Purse', em: '👜',
+          tip: 'Inside and outside. Any stitching, lining, hardware close-ups.',
+          ask: 'Brand? Material? Any wear on corners, handles, or lining? Authenticity proof if designer?' },
+        { id: 'jewelry', label: 'Jewelry / Watch', em: '💍',
+          tip: 'Close-up with good lighting, any markings (karat stamp, brand mark), measurement next to a ruler if possible.',
+          ask: 'Material (gold/silver/etc)? Karat / purity? Any documentation or appraisal? Size if it\'s a ring? Any wear?' },
+        { id: 'clothing_other', label: 'Other clothing', em: '🧣',
+          tip: 'Tag close-up. Any wear shots.',
+          ask: 'Brand? Size? Material? Any flaws?' },
+      ]},
+      { id: 'vehicles', label: 'Vehicles', em: '🚗', items: [
+        { id: 'car', label: 'Car / Truck', em: '🚗',
+          tip: 'Exterior all four corners, interior front + back, dashboard with engine on (showing miles + warning lights), trunk, engine bay.',
+          ask: 'Year, make, model, trim? Mileage? Title status (clean/salvage)? Recent service? Any known issues? Asking price?' },
+        { id: 'motorcycle', label: 'Motorcycle', em: '🏍️',
+          tip: 'Both sides, front, rear, dashboard with mileage, any scuffs or scratches.',
+          ask: 'Year, make, model? Mileage? Title status? Any drops or repairs? Service history?' },
+        { id: 'bike', label: 'Bike', em: '🚲',
+          tip: 'Whole bike from drivetrain side, close-ups of brakes, drivetrain, any scratches on the frame.',
+          ask: 'Brand, model, year? Frame size? Any frame damage or repairs? Tune-up recently? Components if upgraded?' },
+        { id: 'scooter', label: 'Scooter / E-bike', em: '🛴',
+          tip: 'Whole unit, battery (if removable), display, any scuffs. Show it powered on.',
+          ask: 'Brand, model? Battery health and range? Any drops or repairs? Charger included?' },
+      ]},
+      { id: 'home', label: 'Home & Garden', em: '🏠', items: [
+        { id: 'kitchen', label: 'Kitchen', em: '🍳',
+          tip: 'Clean before photographing. Inside and out, any wear.',
+          ask: 'Brand, model? Capacity / size? Any wear?' },
+        { id: 'appliance', label: 'Appliance', em: '🔌',
+          tip: 'Front, model sticker, plug, any rust or wear.',
+          ask: 'Brand, model, year? Working condition? Any rust, scratches, missing parts?' },
+        { id: 'decor', label: 'Decor / Art', em: '🖼️',
+          tip: 'Whole piece + close-ups + the back if it\'s framed.',
+          ask: 'Artist or brand? Dimensions? Material? Any damage?' },
+        { id: 'garden', label: 'Garden / Outdoor', em: '🪴',
+          tip: 'In daylight if possible.',
+          ask: 'What is it? Brand? Size/dimensions? Any wear?' },
+      ]},
+      { id: 'sports', label: 'Sports', em: '⚽', items: [
+        { id: 'exercise', label: 'Exercise gear', em: '🏋️',
+          tip: 'Whole machine + screen + cable wear.',
+          ask: 'Brand, model? Working condition? Any wear or maintenance done?' },
+        { id: 'camping', label: 'Camping / Outdoors', em: '⛺',
+          tip: 'Set up if possible — buyers want to see size.',
+          ask: 'Brand, model? Capacity / size? Any wear, holes, or repairs?' },
+        { id: 'golf', label: 'Golf', em: '⛳',
+          tip: 'Set + bag + any individual clubs of note.',
+          ask: 'Brand(s)? Number of clubs? Any wear on faces or grips?' },
+        { id: 'sports_other', label: 'Other sports', em: '🏀',
+          tip: 'Item + any accessories.',
+          ask: 'What is it? Brand? Size? Any wear?' },
+      ]},
+      { id: 'tools', label: 'Tools', em: '🛠️', items: [
+        { id: 'power', label: 'Power tool', em: '🔌',
+          tip: 'Tool + battery + charger + any bits.',
+          ask: 'Brand, model? Battery + charger included? Working order? Any wear?' },
+        { id: 'hand', label: 'Hand tools', em: '🔧',
+          tip: 'Lay them out so the count is clear.',
+          ask: 'How many pieces? Brand(s)? Any rust or missing pieces?' },
+      ]},
+      { id: 'toys', label: 'Toys & Games', em: '🧸', items: [
+        { id: 'toy', label: 'Toy', em: '🧸',
+          tip: 'All pieces laid out. Close-up of any tags or labels.',
+          ask: 'Brand? Age range? All pieces present? Any wear or missing parts?' },
+        { id: 'boardgame', label: 'Board game', em: '🎲',
+          tip: 'Open box showing all pieces. Note if any are missing.',
+          ask: 'Title? Complete? Box condition? Any custom additions?' },
+        { id: 'videogame', label: 'Video game', em: '🎮',
+          tip: 'Game disc/cart + case + manual if you have it.',
+          ask: 'Title, platform? Disc/cart condition? Case + manual included?' },
+      ]},
+      { id: 'books', label: 'Books / Media', em: '📚', items: [
+        { id: 'book', label: 'Books', em: '📖',
+          tip: 'Stack/spread shot so the count is clear, plus a couple of titles up close.',
+          ask: 'Title(s) and author(s) — or rough genre / number of books if it\'s a bundle? Hardcover or paperback? Any markings?' },
+        { id: 'vinyl', label: 'Vinyl / CDs', em: '💿',
+          tip: 'Album cover + the disc itself for any scratches.',
+          ask: 'Title, artist, year? Pressing if you know? Any scratches or warping?' },
+      ]},
+      { id: 'baby', label: 'Baby & Kids', em: '👶', items: [
+        { id: 'stroller', label: 'Stroller / Car seat', em: '🚼',
+          tip: 'Folded + unfolded. Date of manufacture sticker (important — car seats expire).',
+          ask: 'Brand, model? Manufacture date? Any spills, tears, or recalls?' },
+        { id: 'baby_other', label: 'Other baby gear', em: '🧷',
+          tip: 'All pieces.',
+          ask: 'Brand, model? Age range? Any wear or missing parts?' },
+      ]},
+      { id: 'other', label: 'Other / Just describe it', em: '📦', items: [
+        { id: 'misc', label: "I'll describe it", em: '✏️',
+          tip: 'Photos from a few angles. A clean main shot, then any wear close-ups.',
+          ask: 'Tell me what it is and anything a buyer would want to know.' },
+      ]},
+    ];
+
+    function getCategory(id) { return CATEGORIES.find((c) => c.id === id); }
+    function getItem(catId, itemId) {
+      return getCategory(catId)?.items.find((i) => i.id === itemId);
+    }
+
+    function formatForClipboard(listing) {
+      const price = listing.askingPrice ?? listing.suggestedPriceUSD?.fair;
+      return `${listing.title}\n${price ? `\n$${price}\n` : ''}\n${listing.description}\n\n${listing.tags?.length ? `Tags: ${listing.tags.join(', ')}` : ''}`.trim();
+    }
+
+    async function copyToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        // Fallback for older browsers
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch {}
+        document.body.removeChild(ta);
+        return false;
+      }
+    }
+
+    // ============================================================
+    // Listing health score
+    // ============================================================
+    function computeHealth(draft) {
+      if (!draft || !draft.listing) return { score: 0, items: [] };
+      const items = [];
+      let score = 0;
+
+      const photoCount = (draft.photoIds || []).length;
+      const photosOk = photoCount >= 3;
+      items.push({ ok: photosOk, label: photosOk ? `${photoCount} photos` : `Only ${photoCount} photo${photoCount === 1 ? '' : 's'} — aim for 3+` });
+      if (photosOk) score += 25;
+      else if (photoCount >= 1) score += 10;
+
+      const desc = draft.listing.description || '';
+      const descOk = desc.length >= 100;
+      items.push({ ok: descOk, label: descOk ? 'Description has substance' : 'Description is short — add specifics' });
+      if (descOk) score += 25;
+
+      const priceOk = !!(draft.listing.askingPrice && draft.listing.askingPrice > 0);
+      items.push({ ok: priceOk, label: priceOk ? `Priced at $${draft.listing.askingPrice}` : 'No price set yet' });
+      if (priceOk) score += 20;
+
+      const tagCount = (draft.listing.tags || []).length;
+      const tagsOk = tagCount >= 3;
+      items.push({ ok: tagsOk, label: tagsOk ? `${tagCount} tags` : 'Add a few tags for searchability' });
+      if (tagsOk) score += 15;
+
+      const flags = draft.listing.flagsForUser || [];
+      const dismissed = draft.dismissedFlags || [];
+      const openFlagCount = flags.filter((f) => !dismissed.includes(f)).length;
+      const flagsOk = openFlagCount === 0;
+      items.push({ ok: flagsOk, label: flagsOk ? 'No open flags' : `${openFlagCount} thing${openFlagCount === 1 ? '' : 's'} the AI flagged to verify` });
+      if (flagsOk) score += 15;
+
+      return { score, items };
+    }
+
+    function healthRingSvg(score) {
+      const r = 36, c = 2 * Math.PI * r;
+      const offset = c - (c * score / 100);
+      const cls = score >= 80 ? '' : score >= 50 ? 'warn' : 'bad';
+      return `
+        <div class="health-ring ${cls}">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle class="track" cx="44" cy="44" r="${r}" fill="none" stroke-width="8" />
+            <circle class="bar" cx="44" cy="44" r="${r}" fill="none" stroke-width="8"
+              stroke-dasharray="${c.toFixed(2)}"
+              stroke-dashoffset="${offset.toFixed(2)}"
+              stroke-linecap="round" />
+          </svg>
+          <div class="num">${score}</div>
+        </div>
+      `;
+    }
+
+    // ============================================================
+    // Sales aggregation
+    // ============================================================
+    function aggregateStats(drafts) {
+      let posted = 0, sold = 0, profit = 0, openOffers = 0;
+      const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      let postedThisWeek = 0;
+      for (const d of drafts) {
+        if (d.status === 'posted') posted++;
+        if (d.status === 'sold') {
+          sold++;
+          if (typeof d.soldFor === 'number') profit += d.soldFor;
+        }
+        const lastPost = (d.postedTo || []).map((p) => p.postedAt).sort().pop();
+        if (lastPost && lastPost > weekAgo) postedThisWeek++;
+        for (const o of (d.offers || [])) if (o.status === 'open') openOffers++;
+      }
+      return { posted, sold, profit, openOffers, postedThisWeek };
+    }
+
+    // ============================================================
+    // Sparkles (smaller, classier than confetti — for AI moments)
+    // ============================================================
+    function sparkles({ count = 18, originX, originY } = {}) {
+      const wrap = document.createElement('div');
+      wrap.className = 'sparkles';
+      const cx = originX ?? window.innerWidth / 2;
+      const cy = originY ?? window.innerHeight / 3;
+      const palette = ['#fff', '#c5d4ff', '#d0baff', '#f5d97a', '#a5c4ff'];
+      for (let i = 0; i < count; i++) {
+        const span = document.createElement('span');
+        span.className = 'sp';
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 60 + Math.random() * 140;
+        const x = cx + Math.cos(angle) * dist;
+        const y = cy + Math.sin(angle) * dist;
+        span.style.left = `${x}px`;
+        span.style.top = `${y}px`;
+        span.style.animationDelay = (Math.random() * 0.25) + 's';
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        span.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 0 L8.2 5.8 L14 7 L8.2 8.2 L7 14 L5.8 8.2 L0 7 L5.8 5.8 Z" fill="${color}" />
+          </svg>
+        `;
+        wrap.appendChild(span);
+      }
+      document.body.appendChild(wrap);
+      setTimeout(() => wrap.remove(), 1800);
+    }
+
+    // ============================================================
+    // "The genie is thinking…" — small, branded inline indicator.
+    // Pick a verb suited to the action so it feels alive.
+    // ============================================================
+    const THINK_VERBS = {
+      generating: 'Weaving your listing…',
+      categorizing: 'Peeking at the photo…',
+      rewriting: 'Polishing your words…',
+      replying: 'Thinking up a reply…',
+      processing: 'Working magic…',
+    };
+    function thinking(kind = 'processing') {
+      const text = THINK_VERBS[kind] || THINK_VERBS.processing;
+      return `<span class="genie-think"><span class="spark">✨</span><span class="text">${text}</span></span>`;
+    }
+
+    // ============================================================
+    // Confetti (called on milestones)
+    // ============================================================
+    function confetti(count = 60) {
+      const colors = ['#4f8cff', '#6d5cff', '#22c55e', '#f59e0b', '#ef4444', '#fff'];
+      const wrap = document.createElement('div');
+      wrap.className = 'confetti';
+      for (let i = 0; i < count; i++) {
+        const span = document.createElement('span');
+        span.style.left = (Math.random() * 100) + '%';
+        span.style.background = colors[Math.floor(Math.random() * colors.length)];
+        span.style.animationDelay = (Math.random() * 0.3) + 's';
+        span.style.animationDuration = (1.2 + Math.random() * 0.9) + 's';
+        wrap.appendChild(span);
+      }
+      document.body.appendChild(wrap);
+      setTimeout(() => wrap.remove(), 2400);
+    }
+
+    // ============================================================
+    // Modal
+    // ============================================================
+    function openModal(html) {
+      const root = document.createElement('div');
+      root.className = 'modal-backdrop';
+      root.innerHTML = `<div class="modal">${html}</div>`;
+      // Only dismiss when the click is ON the backdrop itself, not bubbled
+      // from a child. Avoids stealing taps that should hit buttons inside.
+      root.addEventListener('click', (e) => {
+        if (e.target === root) root.remove();
+      });
+      document.body.appendChild(root);
+      // Attach data-action handlers for buttons inside the modal
+      root.querySelectorAll('[data-action]').forEach((el) => el.addEventListener('click', onAction));
+      return root;
+    }
+    function closeModal() {
+      document.querySelectorAll('.modal-backdrop').forEach((m) => m.remove());
+    }
+
+    // ============================================================
+    // App state
+    // ============================================================
+    const state = {
+      view: 'home', // home | welcome | new | edit | chat | settings
+      currentDraftId: null,
+      // transient (not persisted): photo blobs being worked on this session
+      session: {
+        step: 'category',  // category | item | photos | details
+        categoryId: null,
+        itemId: null,
+        photoBlobs: [],
+        hints: '',
+        listing: null,
+        generating: false,
+      },
+      chat: {
+        // Conversations live ON the draft now (draft.conversation). This holds
+        // only transient UI state for the chat view.
+        suggesting: false,
+        lastMeta: null, // {intent, notes, suggested_followups} from the most recent AI reply
+      },
+      rewriting: false, // global flag so double-tap doesn't fire two rewrites
+    };
+
+    function setView(view, { draftId } = {}) {
+      // If the active draft is changing, drop cached object URLs for the previous draft.
+      if (draftId !== undefined && draftId !== state.currentDraftId) {
+        photoUrlCache.clearPersisted();
+      }
+      // Leaving the new-listing flow? Drop in-session URLs.
+      if (state.view === 'new' && view !== 'new') {
+        photoUrlCache.clearSession();
+      }
+      state.view = view;
+      if (draftId !== undefined) state.currentDraftId = draftId;
+      window.scrollTo(0, 0);
+      render();
+    }
+
+    // ============================================================
+    // Toasts
+    // ============================================================
+    function toast(msg, kind = 'good', ms = 2200) {
+      const t = document.createElement('div');
+      t.className = 'toast ' + kind;
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), ms);
+    }
+
+    // ============================================================
+    // Views
+    // ============================================================
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    async function renderHome() {
+      const drafts = await listDrafts();
+      const hasKey = !!settings.apiKey;
+      const stats = aggregateStats(drafts);
+      return `
+        <div class="topbar">
+          <h1>${logoSvg('logo')}<span>Sales Genie</span></h1>
+          <button class="icon-btn" data-action="settings" aria-label="Settings">⚙️</button>
+        </div>
+        <div class="container">
+          ${!hasKey ? `
+            <div class="card" style="border-color: rgba(245,158,11,0.4);">
+              <h3>🔑 Connect the genie</h3>
+              <p class="muted">The genie needs an Anthropic API key to work its magic. Free to make, $5 in starter credits, and the key stays on your device only.</p>
+              <div style="height:12px"></div>
+              <button class="btn primary" data-action="settings">Open Settings</button>
+            </div>
+          ` : ''}
+
+          ${drafts.length > 0 ? `
+            <div class="stats-hero">
+              <div class="stat-tile profit">
+                <div class="v">$${stats.profit.toFixed(0)}</div>
+                <div class="l">Earned</div>
+              </div>
+              <div class="stat-tile">
+                <div class="v">${stats.sold}</div>
+                <div class="l">Sold</div>
+              </div>
+              <div class="stat-tile streak">
+                <div class="v">${stats.postedThisWeek}🔥</div>
+                <div class="l">This week</div>
+              </div>
+            </div>
+          ` : ''}
+
+          <button class="btn primary magic" data-action="new" style="margin-bottom: 18px; font-size: 16px; padding: 16px;">
+            ✨ Sell something new
+          </button>
+
+          <h3 style="margin: 22px 4px 12px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Drafts</h3>
+          ${drafts.length === 0 ? `
+            <div class="empty">
+              <div class="big">🪔</div>
+              <div class="ttl">Your lamp awaits.</div>
+              <div class="sub">Tap "New listing" and the genie will help you turn anything into a sellable post in under a minute.</div>
+            </div>
+          ` : drafts.map((d) => `
+            <div class="draft-row" data-action="open" data-id="${d.id}">
+              <div class="thumb">${d.thumbDataUrl ? `<img src="${d.thumbDataUrl}" />` : ''}</div>
+              <div class="meta">
+                <p class="ttl">${escapeHtml(d.listing?.title || 'Untitled draft')}</p>
+                <div class="sub">
+                  <span class="status ${d.status || 'draft'}">${(d.status || 'draft')}</span>
+                  ${d.listing?.askingPrice ? ` · $${d.listing.askingPrice}` : ''}
+                  ${d.status === 'sold' && d.soldFor ? ` · sold $${d.soldFor}` : ''}
+                </div>
+              </div>
+              <div class="chev">›</div>
+            </div>
+          `).join('')}
+        </div>
+        ${tabbar('home')}
+      `;
+    }
+
+    function tabbar(active) {
+      return `
+        <nav class="tabbar">
+          <button class="${active === 'home' ? 'active' : ''}" data-action="tab-home">
+            <span class="ic">🏠</span><span>Drafts</span>
+          </button>
+          <button class="${active === 'new' ? 'active' : ''}" data-action="tab-new">
+            <span class="ic">＋</span><span>New</span>
+          </button>
+          <button class="${active === 'sales' ? 'active' : ''}" data-action="tab-sales">
+            <span class="ic">📊</span><span>Sales</span>
+          </button>
+          <button class="${active === 'settings' ? 'active' : ''}" data-action="tab-settings">
+            <span class="ic">⚙️</span><span>Settings</span>
+          </button>
+        </nav>
+      `;
+    }
+
+    function renderSettings() {
+      return `
+        <div class="topbar">
+          <button class="icon-btn" data-action="back" aria-label="Back">‹</button>
+          <h1>Settings</h1>
+        </div>
+        <div class="container">
+          <label class="field">
+            <span class="lbl">Claude API key</span>
+            <input class="input" id="apikey" type="password" placeholder="sk-ant-..." value="${escapeHtml(settings.apiKey)}" autocomplete="off" />
+          </label>
+          <p class="muted small" style="margin-top:-8px;margin-bottom:14px;">
+            Get one free at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>. Stored only on this device.
+          </p>
+
+          <label class="field">
+            <span class="lbl">Model</span>
+            <select class="select" id="model">
+              <option value="claude-sonnet-4-6" ${settings.model === 'claude-sonnet-4-6' ? 'selected' : ''}>Claude Sonnet 4.6 (recommended)</option>
+              <option value="claude-haiku-4-5-20251001" ${settings.model === 'claude-haiku-4-5-20251001' ? 'selected' : ''}>Claude Haiku 4.5 (cheaper, faster)</option>
+              <option value="claude-opus-4-6" ${settings.model === 'claude-opus-4-6' ? 'selected' : ''}>Claude Opus 4.6 (best for tricky buyers)</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="lbl">Your location (optional, used in listings)</span>
+            <input class="input" id="loc" type="text" placeholder="e.g. Seattle, WA" value="${escapeHtml(settings.sellerLocation)}" />
+          </label>
+
+          <button class="btn primary" data-action="save-settings">Save</button>
+
+          <hr class="sep" />
+
+          <h3 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:18px 4px 10px;">Danger zone</h3>
+          <button class="btn danger" data-action="wipe">Delete all drafts and photos</button>
+        </div>
+        ${tabbar('settings')}
+      `;
+    }
+
+    function stepbar(currentIdx) {
+      // 4 steps: category, item, photos, details
+      const total = 4;
+      let pips = '';
+      for (let i = 0; i < total; i++) {
+        const cls = i < currentIdx ? 'pip done' : (i === currentIdx ? 'pip current' : 'pip');
+        pips += `<div class="${cls}"></div>`;
+      }
+      return `<div class="stepbar">${pips}</div>`;
+    }
+
+    async function renderNew() {
+      const step = state.session.step;
+      switch (step) {
+        case 'category': return renderStepCategory();
+        case 'item': return renderStepItem();
+        case 'photos': return await renderStepPhotos();
+        case 'details': return renderStepDetails();
+        default: return renderStepCategory();
+      }
+    }
+
+    function renderStepCategory() {
+      return `
+        <div class="topbar">
+          <button class="icon-btn" data-action="back" aria-label="Back">‹</button>
+          <h1>New listing</h1>
+        </div>
+        <div class="container">
+          ${stepbar(0)}
+          <h2 class="step-title">What are you selling?</h2>
+          <p class="step-sub">Pick the closest match — or skip the picker entirely.</p>
+
+          <button class="btn primary magic" data-action="magic-categorize" style="margin-bottom: 14px;">
+            ${state.session.magicDetecting ? thinking('categorizing') : '✨ Let the genie pick from a photo'}
+          </button>
+          <input type="file" id="magic-photo" accept="image/*" capture="environment" />
+
+          <div class="pick-grid">
+            ${CATEGORIES.map((c) => `
+              <button class="pick-card" data-action="pick-category" data-id="${c.id}">
+                <span class="em">${c.em}</span>
+                <span class="lbl">${c.label}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        ${tabbar('new')}
+      `;
+    }
+
+    function renderStepItem() {
+      const cat = getCategory(state.session.categoryId);
+      if (!cat) { state.session.step = 'category'; return renderStepCategory(); }
+      return `
+        <div class="topbar">
+          <button class="icon-btn" data-action="step-back" aria-label="Back">‹</button>
+          <h1>${escapeHtml(cat.label)}</h1>
+        </div>
+        <div class="container">
+          ${stepbar(1)}
+          <h2 class="step-title">Which kind?</h2>
+          <p class="step-sub">Closest match is fine — you can fine-tune later.</p>
+          <div class="pick-grid">
+            ${cat.items.map((it) => `
+              <button class="pick-card" data-action="pick-item" data-id="${it.id}">
+                <span class="em">${it.em}</span>
+                <span class="lbl">${escapeHtml(it.label)}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        ${tabbar('new')}
+      `;
+    }
+
+    async function renderStepPhotos() {
+      const item = getItem(state.session.categoryId, state.session.itemId);
+      const photos = state.session.photoBlobs;
+      const photoTiles = photos.map((p, i) => {
+        const blob = p.processedBlob || p.originalBlob;
+        const url = photoUrlCache.forSessionPhoto(i, blob);
+        return `
+          <div class="photo-tile">
+            <img src="${url}" alt="" />
+            ${p.processedBlob ? `<div class="badge">cleaned</div>` : ''}
+            <button class="x" data-action="remove-photo" data-idx="${i}" aria-label="Remove">✕</button>
+          </div>
+        `;
+      });
+      return `
+        <div class="topbar">
+          <button class="icon-btn" data-action="step-back" aria-label="Back">‹</button>
+          <h1>${escapeHtml(item?.label || 'Photos')}</h1>
+        </div>
+        <div class="container">
+          ${stepbar(2)}
+          <h2 class="step-title">Add photos</h2>
+          <p class="step-sub">More angles = better listing. 3-6 photos is a sweet spot.</p>
+
+          ${item?.tip ? `
+            <div class="tip-card">
+              <strong>Photo tips for ${escapeHtml(item.label.toLowerCase())}:</strong>
+              <div style="margin-top:4px;">${escapeHtml(item.tip)}</div>
+            </div>
+          ` : ''}
+
+          <div class="photo-strip">
+            ${photoTiles.join('')}
+            <label class="add-tile" for="add-photo-camera">
+              <span style="font-size:20px;">📷</span>
+              <span>Take photo</span>
+            </label>
+            <label class="add-tile" for="add-photo-gallery">
+              <span style="font-size:20px;">🖼️</span>
+              <span>From gallery</span>
+            </label>
+          </div>
+          <input type="file" id="add-photo-camera" accept="image/*" capture="environment" />
+          <input type="file" id="add-photo-gallery" accept="image/*" multiple />
+
+          ${photos.length > 0 ? `
+            <div style="height:12px"></div>
+            <div class="row" style="gap:8px; flex-wrap:wrap;">
+              <button class="btn small row" data-action="cleanup-all">✨ Clean up backgrounds</button>
+              ${photos.some((p) => p.processedBlob) ? `<button class="btn small row ghost" data-action="reset-photos">Undo cleanup</button>` : ''}
+            </div>
+            <p class="muted small" style="margin-top:8px;">First time downloads a small AI model (~80MB), then it works offline.</p>
+          ` : ''}
+
+          <hr class="sep" />
+
+          <button class="btn primary" data-action="step-next" ${photos.length === 0 ? 'disabled' : ''}>
+            Next: details →
+          </button>
+        </div>
+        ${tabbar('new')}
+      `;
+    }
+
+    function renderStepDetails() {
+      const item = getItem(state.session.categoryId, state.session.itemId);
+      const canGenerate = !state.session.generating;
+      return `
+        <div class="topbar">
+          <button class="icon-btn" data-action="step-back" aria-label="Back">‹</button>
+          <h1>Details</h1>
+        </div>
+        <div class="container">
+          ${stepbar(3)}
+          <h2 class="step-title">Anything you want to add?</h2>
+          <p class="step-sub">All optional — the AI will fill in what it can see. Specifics make for better listings.</p>
+
+          <label class="field">
+            <span class="lbl">${item ? `Helpful info for ${escapeHtml(item.label.toLowerCase())}` : 'Hints for the AI'}</span>
+            <textarea class="textarea" id="hints" rows="6" placeholder="${escapeHtml(item?.ask || 'Anything a buyer would want to know.')}">${escapeHtml(state.session.hints)}</textarea>
+          </label>
+
+          <button class="btn primary" data-action="generate" ${!canGenerate ? 'disabled' : ''}>
+            ${state.session.generating ? thinking('generating') : '✨ Generate my listing'}
+          </button>
+          <p class="muted small center" style="margin-top: 10px;">Takes ~10 seconds. Costs roughly 1-3¢.</p>
+        </div>
+        ${tabbar('new')}
+      `;
+    }
+
+    async function renderSales() {
+      const drafts = await listDrafts();
+      const stats = aggregateStats(drafts);
+      const sold = drafts.filter((d) => d.status === 'sold').sort((a, b) => (b.soldAt || 0) - (a.soldAt || 0));
+      const live = drafts.filter((d) => d.status === 'posted').sort((a, b) => {
+        const aa = (a.postedTo || []).map((p) => p.postedAt).sort().pop() || 0;
+        const bb = (b.postedTo || []).map((p) => p.postedAt).sort().pop() || 0;
+        return bb - aa;
+      });
+      const allOffers = [];
+      for (const d of drafts) {
+        for (const o of (d.offers || [])) {
+          allOffers.push({ draftId: d.id, draftTitle: d.listing?.title, ...o });
+        }
+      }
+      allOffers.sort((a, b) => (b.at || 0) - (a.at || 0));
+
+      return `
+        <div class="topbar">
+          <h1>My sales</h1>
+        </div>
+        <div class="container">
+          <div class="stats-hero" style="grid-template-columns: 1fr 1fr;">
+            <div class="stat-tile profit">
+              <div class="v">$${stats.profit.toFixed(0)}</div>
+              <div class="l">Total earned</div>
+            </div>
+            <div class="stat-tile">
+              <div class="v">${stats.sold}</div>
+              <div class="l">Items sold</div>
+            </div>
+          </div>
+          <div class="stats-hero">
+            <div class="stat-tile">
+              <div class="v">${stats.posted}</div>
+              <div class="l">Live</div>
+            </div>
+            <div class="stat-tile streak">
+              <div class="v">${stats.postedThisWeek}</div>
+              <div class="l">Posted/wk</div>
+            </div>
+            <div class="stat-tile">
+              <div class="v">${stats.openOffers}</div>
+              <div class="l">Open offers</div>
+            </div>
+          </div>
+
+          ${allOffers.length > 0 ? `
+            <h3 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:18px 4px 10px;">Recent offers</h3>
+            ${allOffers.slice(0, 5).map((o) => `
+              <div class="sales-card" data-action="open" data-id="${o.draftId}">
+                <div class="row between">
+                  <div>
+                    <h3 style="font-size:15px;">${escapeHtml(o.draftTitle || 'Untitled')}</h3>
+                    <div class="muted small">$${o.amount}${o.buyer ? ` from ${escapeHtml(o.buyer)}` : ''} · ${new Date(o.at).toLocaleDateString()}</div>
+                  </div>
+                  <span class="status ${o.status === 'open' ? 'posted' : (o.status === 'accepted' ? 'sold' : 'removed')}">${o.status}</span>
+                </div>
+              </div>
+            `).join('')}
+          ` : ''}
+
+          ${live.length > 0 ? `
+            <h3 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:18px 4px 10px;">Live listings</h3>
+            ${live.map((d) => `
+              <div class="sales-card" data-action="open" data-id="${d.id}">
+                <div class="row between">
+                  <div style="flex:1; min-width:0;">
+                    <h3 style="font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(d.listing.title)}</h3>
+                    <div class="muted small">$${d.listing.askingPrice ?? '?'} · posted on
+                      ${(d.postedTo || []).map((p) => MARKETS.find((m) => m.id === p.platform)?.name || p.platform).join(', ') || 'somewhere'}
+                    </div>
+                  </div>
+                  <span class="muted small">›</span>
+                </div>
+              </div>
+            `).join('')}
+          ` : ''}
+
+          ${sold.length > 0 ? `
+            <h3 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:18px 4px 10px;">Sold</h3>
+            ${sold.map((d) => `
+              <div class="sales-card" data-action="open" data-id="${d.id}">
+                <div class="row between">
+                  <div style="flex:1; min-width:0;">
+                    <h3 style="font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(d.listing.title)}</h3>
+                    <div class="muted small">$${d.soldFor || '?'}${d.soldOnPlatform ? ` on ${MARKETS.find((m) => m.id === d.soldOnPlatform)?.name || d.soldOnPlatform}` : ''}${d.soldAt ? ` · ${new Date(d.soldAt).toLocaleDateString()}` : ''}</div>
+                  </div>
+                  <span class="status sold">sold</span>
+                </div>
+              </div>
+            `).join('')}
+          ` : ''}
+
+          ${drafts.length === 0 ? `
+            <div class="empty">
+              <div class="big">📊</div>
+              <div class="ttl">No sales yet.</div>
+              <div class="sub">Once you start posting and selling, your stats will appear here.</div>
+            </div>
+          ` : ''}
+        </div>
+        ${tabbar('sales')}
+      `;
+    }
+
+    function renderWelcome() {
+      return `
+        <div class="container page-enter" style="padding-top: calc(36px + var(--safe-top));">
+          <div style="text-align:center; margin-bottom: 24px;">
+            <div class="float-logo" style="display:inline-block;">${logoSvg('brand-mark')}</div>
+            <h1 class="brand-name" style="margin: 14px 0 6px;">Sales Genie</h1>
+            <p class="muted" style="margin: 0; font-size: 15px;">Your magical selling assistant.</p>
+          </div>
+
+          <div class="welcome-card">
+            <div class="num">1</div>
+            <h3>Show us what you're selling</h3>
+            <p>Pick a category, snap a few photos. The AI cleans up backgrounds and figures out what the item is.</p>
+          </div>
+
+          <div class="welcome-card">
+            <div class="num">2</div>
+            <h3>AI writes the listing</h3>
+            <p>Title, honest description, suggested price, and a category — done in about 10 seconds. Edit anything you want.</p>
+          </div>
+
+          <div class="welcome-card">
+            <div class="num">3</div>
+            <h3>Share to any app</h3>
+            <p>Tap "Share to apps" and your phone hands the listing + photos straight to eBay, Facebook Marketplace, OfferUp, or wherever you want to post.</p>
+          </div>
+
+          <div class="welcome-card">
+            <div class="num" style="background: linear-gradient(135deg, #f7d98a 0%, #e0a634 100%);">✨</div>
+            <h3>And when buyers message you…</h3>
+            <p>Paste their message into the chat helper. The genie drafts a reply tuned to the situation — counter-offers, pickup logistics, scam warnings, you name it.</p>
+          </div>
+
+          <button class="btn primary" data-action="welcome-done" style="margin-top: 14px;">Let's sell something →</button>
+        </div>
+      `;
+    }
+
+    async function renderEdit() {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) { setView('home'); return ''; }
+      const l = draft.listing;
+      const status = draft.status || 'draft';
+      const health = computeHealth(draft);
+      const photoIds = draft.photoIds || [];
+      const photoUrls = await Promise.all(photoIds.map((pid) => photoUrlCache.forPhotoId(pid)));
+      const missingPhotoCount = photoUrls.filter((u) => !u).length;
+
+      return `
+        <div class="topbar">
+          <button class="icon-btn" data-action="back" aria-label="Back">‹</button>
+          <h1>Listing</h1>
+          <button class="icon-btn" data-action="delete-draft" aria-label="Delete">🗑</button>
+        </div>
+        <div class="container">
+          <div class="photo-strip">
+            ${photoUrls.filter(Boolean).map((u) => `
+              <div class="photo-tile" style="cursor:default;">
+                <img src="${u}" alt="" />
+              </div>
+            `).join('')}
+          </div>
+          ${missingPhotoCount > 0 ? `
+            <div class="card" style="border-color: var(--bad); margin-top: 10px;">
+              <strong>${missingPhotoCount} photo${missingPhotoCount === 1 ? '' : 's'} couldn't be loaded.</strong>
+              <p class="muted small" style="margin: 4px 0 0;">This usually happens after clearing your browser data or in iOS Private mode. The listing text is intact.</p>
+            </div>
+          ` : ''}
+
+          <div class="card" style="display:flex; gap:14px; align-items:center; margin-top: 14px;">
+            ${healthRingSvg(health.score)}
+            <div style="flex:1; min-width:0;">
+              <div class="row between" style="margin-bottom: 4px;">
+                <strong>Listing health</strong>
+                <span class="status ${status}">${status}</span>
+              </div>
+              <div class="muted small">
+                ${health.items.map((i) => `<div>${i.ok ? '✅' : '⚪️'} ${escapeHtml(i.label)}</div>`).join('')}
+              </div>
+            </div>
+          </div>
+
+          <hr class="sep" />
+
+          <label class="field">
+            <span class="lbl">Title</span>
+            <input class="input" id="ttl" maxlength="80" value="${escapeHtml(l.title)}" />
+          </label>
+
+          <label class="field">
+            <span class="lbl">Asking price (USD)</span>
+            <input class="input" id="price" type="number" inputmode="decimal" placeholder="${l.suggestedPriceUSD?.fair ?? ''}" value="${l.askingPrice ?? ''}" />
+            ${l.suggestedPriceUSD ? `<div class="muted small" style="margin-top:6px;">
+              AI suggests:
+              ${l.suggestedPriceUSD.low ? `low $${l.suggestedPriceUSD.low}` : ''}
+              ${l.suggestedPriceUSD.fair ? `· fair <strong>$${l.suggestedPriceUSD.fair}</strong>` : ''}
+              ${l.suggestedPriceUSD.high ? `· high $${l.suggestedPriceUSD.high}` : ''}
+            </div>` : ''}
+          </label>
+
+          <label class="field">
+            <span class="lbl">Condition</span>
+            <select class="select" id="cond">
+              ${['new','like_new','used_good','used_fair','for_parts'].map((c) =>
+                `<option value="${c}" ${l.condition === c ? 'selected' : ''}>${c.replace('_',' ')}</option>`).join('')}
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="lbl">Description</span>
+            <textarea class="textarea" id="desc" rows="10">${escapeHtml(l.description)}</textarea>
+            <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="btn small row magic" data-action="rewrite">✨ Make it better</button>
+              <button class="btn small row ghost" data-action="rewrite-shorter">Shorter</button>
+              <button class="btn small row ghost" data-action="rewrite-honest">More honest</button>
+            </div>
+          </label>
+
+          <label class="field">
+            <span class="lbl">Category</span>
+            <input class="input" id="cat" value="${escapeHtml(l.category || '')}" />
+          </label>
+
+          ${l.tags?.length ? `
+            <div class="field">
+              <span class="lbl">Tags</span>
+              <div>${l.tags.map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+            </div>
+          ` : ''}
+
+          ${(() => {
+            const flags = (l.flagsForUser || []).filter((f) => !(draft.dismissedFlags || []).includes(f));
+            if (flags.length === 0) return '';
+            return `
+              <div class="card" style="border-color: var(--warn);">
+                <h3>Things to double-check</h3>
+                <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 6px;">
+                  ${flags.map((f) => `
+                    <div class="row between" style="gap: 8px; align-items: flex-start;">
+                      <div style="flex:1;">${escapeHtml(f)}</div>
+                      <button class="btn small row ghost" data-action="dismiss-flag" data-flag="${escapeHtml(f)}" aria-label="Dismiss this flag">✓</button>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          })()}
+
+          <button class="btn" data-action="save-edits">💾 Save changes</button>
+
+          <hr class="sep" />
+
+          <h3 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:0 4px 10px;">Post this listing</h3>
+
+          <button class="btn primary" data-action="share-listing">
+            📲 Share to apps (recommended on phone)
+          </button>
+          <p class="muted small" style="margin: 6px 4px 14px;">Pops up your phone's share sheet with the listing text and photos. Pick eBay, Facebook, OfferUp, Messages, or any app that accepts shared content.</p>
+
+          <button class="btn" data-action="download-photos" style="margin-bottom: 14px;">⬇️ Download photos to camera roll</button>
+
+          <p class="muted small" style="margin: 0 4px 8px;">Or jump straight to a specific marketplace's create-listing page (we copy the text to your clipboard first):</p>
+          <div class="market-grid">
+            ${MARKETS.map((m) => `
+              <button class="market-btn" data-action="market" data-id="${m.id}">
+                <div class="name">${m.name}</div>
+                <div class="hint">${m.hint}</div>
+              </button>
+            `).join('')}
+          </div>
+          <p class="muted small" style="margin: 12px 4px 0;">None of these platforms (other than eBay's API, which needs a server) let outside apps post for you, so the actual posting happens in their app or website. We get you as close to one tap as the platforms allow.</p>
+
+          <hr class="sep" />
+
+          <h3 style="font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:0 4px 10px;">Track this listing</h3>
+
+          <div class="card">
+            <div class="muted small" style="margin-bottom: 8px;">Mark where you've actually posted it (or the share sheet did) so you can track sales.</div>
+            <div class="chip-row">
+              ${MARKETS.map((m) => {
+                const posted = (draft.postedTo || []).find((p) => p.platform === m.id);
+                return `<button class="chip ${posted ? 'success' : ''}" data-action="toggle-posted" data-id="${m.id}">${posted ? '✓ ' : ''}${m.name}</button>`;
+              }).join('')}
+            </div>
+          </div>
+
+          ${(draft.offers || []).length > 0 ? `
+            <div class="card">
+              <strong>Offers received</strong>
+              ${draft.offers.map((o, i) => `
+                <div class="row between" style="margin-top: 8px;">
+                  <div>
+                    <div><strong>$${o.amount}</strong>${o.buyer ? ` from ${escapeHtml(o.buyer)}` : ''}</div>
+                    <div class="muted small">${new Date(o.at).toLocaleDateString()} · ${o.status}</div>
+                  </div>
+                  <button class="btn small row ghost" data-action="remove-offer" data-idx="${i}">×</button>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          <div class="row" style="gap: 8px; flex-wrap: wrap;">
+            <button class="btn small row" data-action="add-offer">+ Log an offer</button>
+            ${status !== 'sold' ? `<button class="btn small row" data-action="mark-sold">✓ Mark sold</button>` : `<button class="btn small row ghost" data-action="unmark-sold">Undo "sold"</button>`}
+            ${status === 'posted' ? `<button class="btn small row ghost" data-action="mark-removed">Remove (not sold)</button>` : ''}
+          </div>
+
+          <hr class="sep" />
+
+          <button class="btn" data-action="open-chat">💬 Reply to a buyer</button>
+          <p class="muted small center" style="margin-top: 8px;">AI helps you draft replies. You send them yourself.</p>
+        </div>
+        ${tabbar(null)}
+      `;
+    }
+
+    const INTENT_LABEL = {
+      available_q: '🟢 "Is it still available?"',
+      details_q: '❓ Question about the item',
+      price_offer: '💵 Price offer',
+      lowball: '⚠️ Lowball offer',
+      scam_suspected: '🚨 Possible scam',
+      logistics: '📍 Pickup / logistics',
+      going_silent: '🤫 Buyer went quiet',
+      ghosting_recovery: '🎣 Re-engaging',
+      small_talk: '💬 Small talk',
+      other: '💬 Reply',
+    };
+
+    async function renderChat() {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) { setView('home'); return ''; }
+      const conv = draft.conversation || [];
+      const lastMeta = state.chat.lastMeta; // {intent, notes, suggested_followups}
+
+      const lastIsAi = conv.length > 0 && conv[conv.length - 1].from === 'you';
+
+      return `
+        <div class="topbar">
+          <button class="icon-btn" data-action="back-edit" aria-label="Back">‹</button>
+          <h1>Buyer chat</h1>
+          ${conv.length > 0 ? `<button class="icon-btn" data-action="reset-chat" aria-label="Reset thread">↺</button>` : ''}
+        </div>
+        <div class="container">
+          <div class="card">
+            <h3>${escapeHtml(draft.listing.title)}</h3>
+            <p class="muted small">$${draft.listing.askingPrice ?? draft.listing.suggestedPriceUSD?.fair ?? '?'} · ${draft.listing.condition.replace('_',' ')}</p>
+          </div>
+
+          <div class="chat-log">
+            ${conv.length === 0 ? `
+              <div class="empty" style="padding: 30px 0 20px;">
+                <div class="big" style="font-size: 44px;">💬</div>
+                <div class="ttl">Ready when you are.</div>
+                <div class="sub">Paste a buyer's message below and the genie will draft a reply for you.</div>
+              </div>
+            ` : ''}
+            ${conv.map((m, i) => `
+              <div class="msg ${m.from === 'buyer' ? 'buyer' : 'you'}">
+                <div class="label">${m.from === 'buyer' ? 'Buyer' : 'You'}</div>
+                ${escapeHtml(m.text)}
+                ${m.from === 'you' && i === conv.length - 1 ? `
+                  <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+                    <button class="btn small row" data-action="copy-reply">Copy</button>
+                    <button class="btn small row ghost" data-action="share-reply">Share to app</button>
+                    <button class="btn small row ghost" data-action="redo-reply">Try again</button>
+                  </div>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
+
+          ${lastMeta && lastIsAi ? `
+            <div class="card" style="border-color: ${lastMeta.intent === 'scam_suspected' ? 'var(--bad)' : lastMeta.intent === 'lowball' ? 'var(--warn)' : 'var(--border)'}; margin-top: 8px;">
+              <div class="muted small" style="margin-bottom: 4px;">${INTENT_LABEL[lastMeta.intent] || INTENT_LABEL.other}</div>
+              ${lastMeta.notes ? `<p style="margin: 0 0 ${lastMeta.suggested_followups?.length ? '10px' : '0'}; font-size: 14px;">${escapeHtml(lastMeta.notes)}</p>` : ''}
+              ${lastMeta.suggested_followups?.length ? `
+                <div class="muted small" style="margin-bottom: 6px;">Quick follow-ups:</div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  ${lastMeta.suggested_followups.map((f) => `
+                    <button class="btn small row ghost" data-action="followup" data-text="${escapeHtml(f)}">${escapeHtml(f)}</button>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
+
+          <hr class="sep" />
+
+          ${lastIsAi ? `
+            <label class="field">
+              <span class="lbl">Buyer's next message</span>
+              <textarea class="textarea" id="buyer-msg" placeholder="Paste what they replied..."></textarea>
+            </label>
+            <button class="btn primary" data-action="suggest-reply" ${state.chat.suggesting ? 'disabled' : ''}>
+              ${state.chat.suggesting ? thinking('replying') : '✨ Suggest reply'}
+            </button>
+          ` : `
+            <label class="field">
+              <span class="lbl">${conv.length === 0 ? "Buyer's message" : "Buyer's reply"}</span>
+              <textarea class="textarea" id="buyer-msg" placeholder="Paste what the buyer wrote..."></textarea>
+            </label>
+            <label class="field">
+              <span class="lbl">Optional: tell the AI how to reply</span>
+              <input class="input" id="instruction" type="text" placeholder="e.g. 'firm on price', 'offer to deliver for $20', 'ask for pickup time'" />
+            </label>
+            <button class="btn primary" data-action="suggest-reply" ${state.chat.suggesting ? 'disabled' : ''}>
+              ${state.chat.suggesting ? '<span class="spinner"></span> Drafting reply…' : '✨ Suggest reply'}
+            </button>
+          `}
+
+          ${conv.length === 0 ? `
+            <div style="height:14px"></div>
+            <div class="muted small" style="margin-bottom: 8px;">Or pick a common scenario:</div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              ${[
+                ['Is this still available?', 'available_q'],
+                ['Would you take $X for it?', 'lowball'],
+                ['Can you ship?', 'logistics'],
+                ['Hi, my agent will pick this up.', 'scam_suspected'],
+              ].map(([txt]) => `
+                <button class="btn small row ghost" data-action="prefill-buyer" data-text="${escapeHtml(txt)}">${escapeHtml(txt)}</button>
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // ============================================================
+    // Render dispatcher
+    // ============================================================
+    async function render() {
+      const root = document.getElementById('root');
+      // Capture focus state + cursor position so re-renders don't kick the user
+      // out of a textarea / input while they're typing.
+      const active = document.activeElement;
+      const focusInfo = active && (active.tagName === 'TEXTAREA' || active.tagName === 'INPUT')
+        ? { id: active.id, selStart: active.selectionStart, selEnd: active.selectionEnd, scrollY: window.scrollY }
+        : null;
+
+      let html = '';
+      switch (state.view) {
+        case 'welcome': html = renderWelcome(); break;
+        case 'home': html = await renderHome(); break;
+        case 'sales': html = await renderSales(); break;
+        case 'new': html = await renderNew(); break;
+        case 'edit': html = await renderEdit(); break;
+        case 'chat': html = await renderChat(); break;
+        case 'settings': html = renderSettings(); break;
+        default: html = await renderHome();
+      }
+      root.innerHTML = html;
+      // Trigger the page-enter animation only on view changes, not focus restores.
+      // We tag the inner container via JS rather than the template so we don't
+      // have to thread a class through every renderer.
+      if (!focusInfo) {
+        const firstContainer = root.querySelector('.container');
+        if (firstContainer) {
+          firstContainer.classList.remove('page-enter');
+          // Force reflow so animation re-runs across consecutive view changes
+          void firstContainer.offsetWidth;
+          firstContainer.classList.add('page-enter');
+        }
+      }
+      attachHandlers();
+
+      // Restore focus + selection if the same element still exists.
+      if (focusInfo && focusInfo.id) {
+        const el = document.getElementById(focusInfo.id);
+        if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT')) {
+          try {
+            el.focus({ preventScroll: true });
+            if (typeof focusInfo.selStart === 'number' && el.setSelectionRange) {
+              el.setSelectionRange(focusInfo.selStart, focusInfo.selEnd);
+            }
+          } catch {}
+          window.scrollTo(0, focusInfo.scrollY);
+        }
+      }
+    }
+
+    // ============================================================
+    // Event handlers
+    // ============================================================
+    function attachHandlers() {
+      document.querySelectorAll('[data-action]').forEach((el) => {
+        el.addEventListener('click', onAction);
+      });
+      const cam = document.getElementById('add-photo-camera');
+      const gal = document.getElementById('add-photo-gallery');
+      if (cam) cam.addEventListener('change', onPhotoAdd);
+      if (gal) gal.addEventListener('change', onPhotoAdd);
+      const magicPhoto = document.getElementById('magic-photo');
+      if (magicPhoto) magicPhoto.addEventListener('change', onMagicCategorizePhoto);
+      const hints = document.getElementById('hints');
+      if (hints) hints.addEventListener('input', (e) => { state.session.hints = e.target.value; });
+    }
+
+    async function onAction(e) {
+      const el = e.currentTarget;
+      const action = el.dataset.action;
+      const id = el.dataset.id;
+      const idx = el.dataset.idx;
+      try {
+        switch (action) {
+          case 'tab-home': setView('home'); break;
+          case 'tab-new': resetSession(); setView('new'); break;
+          case 'tab-sales': setView('sales'); break;
+          case 'tab-settings':
+          case 'settings': setView('settings'); break;
+          case 'new': resetSession(); setView('new'); break;
+          case 'back': await onBack(); break;
+          case 'back-edit': setView('edit'); break;
+          case 'open': setView('edit', { draftId: id }); break;
+
+          case 'welcome-done':
+            localStorage.setItem('seen_welcome', '1');
+            setView('home');
+            break;
+          case 'pick-category': onPickCategory(id); break;
+          case 'pick-item': onPickItem(id); break;
+          case 'step-back': onStepBack(); break;
+          case 'step-next': onStepNext(); break;
+
+          case 'save-settings': onSaveSettings(); break;
+          case 'wipe': await onWipe(); break;
+
+          case 'remove-photo': onRemovePhoto(parseInt(idx, 10)); break;
+          case 'cleanup-all': await onCleanupAll(); break;
+          case 'reset-photos': onResetPhotos(); break;
+          case 'generate': await onGenerate(); break;
+
+          case 'save-edits': await onSaveEdits(); break;
+          case 'delete-draft': await onDeleteDraft(); break;
+          case 'market': await onMarket(id); break;
+          case 'open-chat': await onOpenChat(); break;
+          case 'suggest-reply': await onSuggestReply(); break;
+          case 'redo-reply': await onRedoReply(); break;
+          case 'copy-reply': await onCopyReply(); break;
+          case 'share-reply': await onShareReply(); break;
+          case 'reset-chat': await onResetChat(); break;
+          case 'prefill-buyer': onPrefillBuyer(el.dataset.text); break;
+          case 'followup': await onFollowup(el.dataset.text); break;
+          case 'share-listing': await onShareListing(); break;
+          case 'download-photos': await onDownloadPhotos(); break;
+
+          case 'magic-categorize': document.getElementById('magic-photo')?.click(); break;
+          case 'rewrite': await onRewrite('better'); break;
+          case 'rewrite-shorter': await onRewrite('shorter'); break;
+          case 'rewrite-honest': await onRewrite('honest'); break;
+          case 'dismiss-flag': await onDismissFlag(el.dataset.flag); break;
+
+          case 'toggle-posted': await onTogglePosted(id); break;
+          case 'add-offer': onAddOffer(); break;
+          case 'submit-offer': await onSubmitOffer(); break;
+          case 'remove-offer': await onRemoveOffer(parseInt(idx, 10)); break;
+          case 'mark-sold': onMarkSoldDialog(); break;
+          case 'submit-sold': await onSubmitSold(); break;
+          case 'unmark-sold': await onUnmarkSold(); break;
+          case 'mark-removed': await onMarkRemoved(); break;
+          case 'close-modal': closeModal(); break;
+        }
+      } catch (err) {
+        console.error(err);
+        toast(err.message || 'Something went wrong', 'bad', 4000);
+      }
+    }
+
+    async function onBack() {
+      if (state.view === 'new') {
+        // No work yet → leave silently
+        if (state.session.photoBlobs.length === 0 && !state.session.itemId) {
+          resetSession();
+          setView('home');
+          return;
+        }
+        const photoCount = state.session.photoBlobs.length;
+        const msg = photoCount > 0
+          ? `Discard ${photoCount} photo${photoCount === 1 ? '' : 's'} and start over?`
+          : 'Start over?';
+        if (confirm(msg)) {
+          resetSession();
+          setView('home');
+        }
+      } else if (state.view === 'edit' || state.view === 'settings') {
+        setView('home');
+      } else {
+        setView('home');
+      }
+    }
+
+    function onPickCategory(catId) {
+      state.session.categoryId = catId;
+      state.session.itemId = null;
+      state.session.step = 'item';
+      render();
+    }
+
+    function onPickItem(itemId) {
+      state.session.itemId = itemId;
+      state.session.step = 'photos';
+      render();
+    }
+
+    function onStepBack() {
+      const order = ['category', 'item', 'photos', 'details'];
+      const idx = order.indexOf(state.session.step);
+      if (idx <= 0) {
+        resetSession();
+        setView('home');
+        return;
+      }
+      // Save the typed hints so they're not lost when stepping back+forward.
+      const ta = document.getElementById('hints');
+      if (ta) state.session.hints = ta.value;
+      state.session.step = order[idx - 1];
+      render();
+    }
+
+    function onStepNext() {
+      // Persist any text from the photo step before leaving.
+      const ta = document.getElementById('hints');
+      if (ta) state.session.hints = ta.value;
+      const order = ['category', 'item', 'photos', 'details'];
+      const idx = order.indexOf(state.session.step);
+      if (idx < 0 || idx >= order.length - 1) return;
+      // Validate transitions
+      if (state.session.step === 'photos' && state.session.photoBlobs.length === 0) {
+        toast('Add at least one photo first.', 'bad');
+        return;
+      }
+      state.session.step = order[idx + 1];
+      render();
+    }
+
+    function resetSession() {
+      photoUrlCache.clearSession();
+      state.session = {
+        step: 'category', categoryId: null, itemId: null,
+        photoBlobs: [], hints: '', listing: null, generating: false,
+        magicDetecting: false,
+      };
+      state.chat = { suggesting: false, lastMeta: null };
+    }
+
+    async function onPhotoAdd(e) {
+      const files = Array.from(e.target.files || []);
+      if (files.length === 0) return;
+      for (const file of files) {
+        const blob = await fileToBlob(file);
+        // Resize originals up front to keep memory sane (but keep an ample copy)
+        const originalBlob = await resizeImage(blob, 2000, 0.92);
+        state.session.photoBlobs.push({ originalBlob, processedBlob: null });
+      }
+      e.target.value = '';
+      await render();
+    }
+
+    function onRemovePhoto(idx) {
+      state.session.photoBlobs.splice(idx, 1);
+      // Indices shifted; safest to drop and let the cache rebuild on next render.
+      photoUrlCache.clearSession();
+      render();
+    }
+
+    function onResetPhotos() {
+      for (const p of state.session.photoBlobs) p.processedBlob = null;
+      photoUrlCache.clearSession();
+      render();
+    }
+
+    async function onCleanupAll() {
+      const photos = state.session.photoBlobs;
+      const todo = photos.filter((p) => !p.processedBlob);
+      if (todo.length === 0) { toast('Already cleaned'); return; }
+      toast('Loading the AI image library (first time downloads ~80MB)…', 'good', 3500);
+      let removeBackground;
+      try {
+        removeBackground = await ensureBgRemoval();
+      } catch (err) {
+        toast(err.message, 'bad', 5000);
+        return;
+      }
+      toast(`Removing background from ${todo.length} photo${todo.length > 1 ? 's' : ''}…`);
+      for (const p of photos) {
+        if (p.processedBlob) continue;
+        try {
+          const cutoutBlob = await removeBackground(p.originalBlob);
+          // Composite onto white so platforms display nicely.
+          p.processedBlob = await compositeOnColor(cutoutBlob, '#ffffff');
+          await render(); // progressive update
+        } catch (err) {
+          console.error('bg removal failed', err);
+          toast('Background removal failed for one photo', 'bad');
+        }
+      }
+      toast('Done.', 'good');
+    }
+
+    async function onGenerate() {
+      if (!requireApiKey()) return;
+      if (state.session.generating) return; // ignore double-taps
+      // Capture any in-flight textarea text first.
+      const ta = document.getElementById('hints');
+      if (ta) state.session.hints = ta.value;
+      const photos = state.session.photoBlobs;
+      if (photos.length === 0) { toast('Add at least one photo.', 'bad'); return; }
+      state.session.generating = true;
+      await render();
+      try {
+        const blobs = photos.map((p) => p.processedBlob || p.originalBlob);
+        const hintsParts = [];
+        if (state.session.hints) hintsParts.push(state.session.hints);
+        if (settings.sellerLocation) hintsParts.push(`Seller location: ${settings.sellerLocation}`);
+        const cat = getCategory(state.session.categoryId);
+        const item = getItem(state.session.categoryId, state.session.itemId);
+        const listing = await generateListing({
+          photoBlobs: blobs,
+          hints: hintsParts.join('\n'),
+          categoryLabel: cat?.label,
+          itemLabel: item?.label,
+        });
+
+        // Persist photos and create the draft
+        const photoIds = [];
+        let thumbDataUrl = null;
+        for (let i = 0; i < photos.length; i++) {
+          const p = photos[i];
+          const finalBlob = p.processedBlob || p.originalBlob;
+          const pid = await savePhoto(finalBlob);
+          photoIds.push(pid);
+          if (i === 0) {
+            const thumb = await resizeImage(finalBlob, 240, 0.8);
+            thumbDataUrl = await blobToDataUrl(thumb);
+          }
+        }
+        const draft = {
+          id: 'd_' + Math.random().toString(36).slice(2, 10),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          photoIds,
+          thumbDataUrl,
+          listing: { ...listing, askingPrice: listing.suggestedPriceUSD?.fair ?? null },
+        };
+        await saveDraft(draft);
+        state.session.generating = false;
+        resetSession();
+        setView('edit', { draftId: draft.id });
+        sparkles({ count: 22 });
+        toast('Listing ready. Review and edit before posting.', 'good');
+      } catch (err) {
+        state.session.generating = false;
+        await render();
+        throw err;
+      }
+    }
+
+    async function onDismissFlag(flag) {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      draft.dismissedFlags = draft.dismissedFlags || [];
+      if (!draft.dismissedFlags.includes(flag)) draft.dismissedFlags.push(flag);
+      await saveDraft(draft);
+      await render();
+    }
+
+    async function onSaveEdits() {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      const ttl = document.getElementById('ttl').value.trim();
+      const desc = document.getElementById('desc').value;
+      const cat = document.getElementById('cat').value.trim();
+      const cond = document.getElementById('cond').value;
+      const priceStr = document.getElementById('price').value.trim();
+      const price = priceStr ? parseFloat(priceStr) : null;
+      draft.listing.title = ttl;
+      draft.listing.description = desc;
+      draft.listing.category = cat;
+      draft.listing.condition = cond;
+      draft.listing.askingPrice = Number.isFinite(price) ? price : null;
+      await saveDraft(draft);
+      toast('Saved.', 'good');
+    }
+
+    async function onDeleteDraft() {
+      if (!confirm('Delete this draft and its photos?')) return;
+      await deleteDraft(state.currentDraftId);
+      state.currentDraftId = null;
+      setView('home');
+    }
+
+    async function onMarket(marketId) {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      const market = MARKETS.find((m) => m.id === marketId);
+      if (!market) return;
+      const text = formatForClipboard(draft.listing);
+      await copyToClipboard(text);
+      toast(`Copied. Opening ${market.name}…`, 'good', 2800);
+      // Slight delay so the toast renders before nav
+      setTimeout(() => { window.open(market.url, '_blank', 'noopener'); }, 250);
+    }
+
+    async function onShareListing() {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      const text = formatForClipboard(draft.listing);
+      const title = draft.listing.title;
+
+      // Build File objects from the saved photos
+      const files = [];
+      for (let i = 0; i < (draft.photoIds || []).length; i++) {
+        const pid = draft.photoIds[i];
+        const blob = await getPhoto(pid);
+        if (!blob) continue;
+        const ext = (blob.type.includes('png') ? 'png' : 'jpg');
+        files.push(new File([blob], `photo-${i + 1}.${ext}`, { type: blob.type || 'image/jpeg' }));
+      }
+
+      // Prefer Web Share API with files (mobile)
+      if (navigator.canShare && files.length > 0 && navigator.canShare({ files })) {
+        try {
+          await navigator.share({ title, text, files });
+          return;
+        } catch (e) {
+          if (e.name === 'AbortError') return;
+          console.warn('share with files failed, falling back to text-only:', e);
+        }
+      }
+      // Text-only share (some desktop browsers, Android without file share)
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, text });
+          await onDownloadPhotos(true);
+          return;
+        } catch (e) {
+          if (e.name === 'AbortError') return;
+        }
+      }
+      // No share API at all (most desktop): copy + tell user
+      await copyToClipboard(text);
+      toast("Listing copied. This device doesn't support sharing — open your marketplace and paste.", 'good', 4000);
+    }
+
+    async function onDownloadPhotos(silent = false) {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft || !draft.photoIds?.length) {
+        if (!silent) toast('No photos to download.', 'bad');
+        return;
+      }
+      let count = 0, missing = 0;
+      for (let i = 0; i < draft.photoIds.length; i++) {
+        const blob = await getPhoto(draft.photoIds[i]);
+        if (!blob) { missing++; continue; }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const ext = blob.type?.includes('png') ? 'png' : 'jpg';
+        a.download = `${(draft.listing.title || 'listing').replace(/[^a-z0-9]+/gi, '-').slice(0, 40)}-${i + 1}.${ext}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        count++;
+        // Small delay between downloads — browsers sometimes throttle batches
+        await new Promise((r) => setTimeout(r, 120));
+      }
+      if (silent) return;
+      if (missing > 0) toast(`Saved ${count}; ${missing} couldn't be loaded.`, 'bad', 4000);
+      else toast(`Saved ${count} photo${count === 1 ? '' : 's'}.`, 'good');
+    }
+
+    async function onOpenChat() {
+      state.chat = { suggesting: false, lastMeta: null };
+      setView('chat');
+    }
+
+    async function onSuggestReply() {
+      if (!requireApiKey()) return;
+      if (state.chat.suggesting) return;
+      const ta = document.getElementById('buyer-msg');
+      const instr = document.getElementById('instruction');
+      const buyerText = (ta?.value || '').trim();
+      const instruction = (instr?.value || '').trim();
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      draft.conversation = draft.conversation || [];
+      // Only push the buyer message if there's new buyer text.
+      if (buyerText) draft.conversation.push({ from: 'buyer', text: buyerText, at: Date.now() });
+      else if (draft.conversation.length === 0) {
+        toast('Paste the buyer\'s message first.', 'bad');
+        return;
+      }
+      state.chat.suggesting = true;
+      await saveDraft(draft);
+      await render();
+      try {
+        const result = await chatReply({ listing: draft.listing, conversation: draft.conversation, instruction });
+        draft.conversation.push({ from: 'you', text: result.reply, at: Date.now() });
+        state.chat.lastMeta = { intent: result.intent, notes: result.notes, suggested_followups: result.suggested_followups || [] };
+        await saveDraft(draft);
+      } finally {
+        state.chat.suggesting = false;
+        await render();
+      }
+    }
+
+    async function onRedoReply() {
+      if (!requireApiKey()) return;
+      if (state.chat.suggesting) return;
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft || !draft.conversation?.length) return;
+      // Drop the last seller message and re-ask
+      const last = draft.conversation[draft.conversation.length - 1];
+      if (last.from !== 'you') return;
+      draft.conversation.pop();
+      await saveDraft(draft);
+      state.chat.suggesting = true;
+      await render();
+      try {
+        const result = await chatReply({ listing: draft.listing, conversation: draft.conversation, instruction: 'Try a different angle than before — same goal but new wording.' });
+        draft.conversation.push({ from: 'you', text: result.reply, at: Date.now() });
+        state.chat.lastMeta = { intent: result.intent, notes: result.notes, suggested_followups: result.suggested_followups || [] };
+        await saveDraft(draft);
+      } finally {
+        state.chat.suggesting = false;
+        await render();
+      }
+    }
+
+    async function onFollowup(label) {
+      if (!requireApiKey()) return;
+      if (state.chat.suggesting) return;
+      // The user picked a one-tap follow-up; treat the label as an instruction
+      // and ask for a new seller reply WITHOUT a new buyer message.
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft || !draft.conversation?.length) return;
+      // Drop the previous seller reply if it's the latest message — this is a redo with a directive
+      if (draft.conversation[draft.conversation.length - 1].from === 'you') draft.conversation.pop();
+      state.chat.suggesting = true;
+      await saveDraft(draft);
+      await render();
+      try {
+        const result = await chatReply({ listing: draft.listing, conversation: draft.conversation, instruction: label });
+        draft.conversation.push({ from: 'you', text: result.reply, at: Date.now() });
+        state.chat.lastMeta = { intent: result.intent, notes: result.notes, suggested_followups: result.suggested_followups || [] };
+        await saveDraft(draft);
+      } finally {
+        state.chat.suggesting = false;
+        await render();
+      }
+    }
+
+    function onPrefillBuyer(text) {
+      const ta = document.getElementById('buyer-msg');
+      if (ta) { ta.value = text; ta.focus(); }
+    }
+
+    async function onResetChat() {
+      if (!confirm('Clear this chat and start a new buyer thread?')) return;
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      draft.conversation = [];
+      state.chat.lastMeta = null;
+      await saveDraft(draft);
+      await render();
+    }
+
+    async function onCopyReply() {
+      const draft = await getDraft(state.currentDraftId);
+      const last = draft?.conversation?.slice().reverse().find((m) => m.from === 'you');
+      if (!last) return;
+      await copyToClipboard(last.text);
+      toast('Reply copied.', 'good');
+    }
+
+    async function onShareReply() {
+      const draft = await getDraft(state.currentDraftId);
+      const last = draft?.conversation?.slice().reverse().find((m) => m.from === 'you');
+      if (!last) return;
+      if (navigator.share) {
+        try {
+          await navigator.share({ text: last.text });
+        } catch (e) { if (e.name !== 'AbortError') throw e; }
+      } else {
+        await copyToClipboard(last.text);
+        toast('Reply copied (no share sheet on this device).', 'good');
+      }
+    }
+
+    function onSaveSettings() {
+      const wasEmpty = !settings.apiKey;
+      const k = document.getElementById('apikey').value.trim();
+      const m = document.getElementById('model').value;
+      const loc = document.getElementById('loc').value.trim();
+      settings.apiKey = k;
+      settings.model = m;
+      settings.sellerLocation = loc;
+      toast('Settings saved.', 'good');
+      // First-time setup: show the welcome flow before the home screen.
+      if (wasEmpty && k && !localStorage.getItem('seen_welcome')) {
+        setView('welcome');
+      } else {
+        setView('home');
+      }
+    }
+
+    async function onWipe() {
+      if (!confirm('Delete ALL drafts and photos? This cannot be undone.')) return;
+      photoUrlCache.clearAll();
+      await draftsStore.clear();
+      await photosStore.clear();
+      toast('Wiped.', 'good');
+      setView('home');
+    }
+
+    // ============================================================
+    // Magic: AI auto-detect category from a photo
+    // ============================================================
+    async function categorizeFromPhoto(blob) {
+      const resized = await resizeImage(blob, 1024, 0.85);
+      const dataUrl = await blobToDataUrl(resized);
+      const base64 = dataUrl.split(',')[1];
+      const cats = CATEGORIES.map((c) => ({
+        id: c.id,
+        label: c.label,
+        items: c.items.map((i) => ({ id: i.id, label: i.label })),
+      }));
+      const system = `You categorize items for a marketplace listing app. You are given a photo and a fixed list of category + item slugs. Pick the best matching category id and item id. Always respond with JSON in a \`\`\`json block.`;
+      const user = `Look at this photo and pick the best match.
+
+Available categories and item types:
+${JSON.stringify(cats, null, 2)}
+
+Respond with JSON shape:
+{
+  "categoryId": string,    // must be one of the category ids above
+  "itemId": string,        // must be one of the item ids inside that category
+  "confidence": "high" | "medium" | "low",
+  "guess": string          // 1-2 word guess of what the item actually is, e.g. "iPhone 13", "leather sofa"
+}`;
+      const text = await callClaude({
+        system,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
+            { type: 'text', text: user },
+          ],
+        }],
+        maxTokens: 300,
+      });
+      return extractJson(text);
+    }
+
+    async function onMagicCategorizePhoto(e) {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      e.target.value = '';
+      if (!requireApiKey()) return;
+      state.session.magicDetecting = true;
+      await render();
+      try {
+        // Pre-resize and store as the first photo so we don't waste it.
+        const blob = await resizeImage(file, 2000, 0.92);
+        state.session.photoBlobs.push({ originalBlob: blob, processedBlob: null });
+        const result = await categorizeFromPhoto(blob);
+        const cat = getCategory(result.categoryId);
+        const item = cat?.items.find((i) => i.id === result.itemId);
+        if (cat && item) {
+          state.session.categoryId = cat.id;
+          state.session.itemId = item.id;
+          state.session.step = 'photos';
+          sparkles({ count: 12 });
+          toast(`Got it — looks like a ${result.guess || item.label.toLowerCase()}.`, 'good', 2600);
+        } else {
+          toast("Couldn't tell from the photo — pick a category manually.", 'bad');
+        }
+      } catch (err) {
+        console.error(err);
+        toast(err.message || 'Auto-detect failed.', 'bad');
+      } finally {
+        state.session.magicDetecting = false;
+        await render();
+      }
+    }
+
+    // ============================================================
+    // Magic: rewrite the listing with a chosen angle
+    // ============================================================
+    async function rewriteListing({ listing, angle }) {
+      const angleHint = {
+        better: 'Make this listing 10% better. Same facts, but tighter and more compelling. Keep the same structure unless the existing one is clearly bad.',
+        shorter: 'Cut this description to roughly half its length. Keep all the important facts; remove fluff and repetition.',
+        honest: 'Make this description more honest and specific. Add hedges where the photos can\'t verify a claim. Be direct about flaws if any are visible.',
+      }[angle] || 'Improve this listing.';
+      const system = `You rewrite marketplace listings. ${angleHint} Output ONLY the new description text — no preamble, no quotes, no markdown headers. Keep the same factual content; do not invent details that aren't in the original.`;
+      const userText = `Original description:
+${listing.description}
+
+(Title for context: ${listing.title}. Condition: ${listing.condition}.)
+
+Now rewrite.`;
+      return await callClaude({
+        system,
+        messages: [{ role: 'user', content: userText }],
+        maxTokens: 1200,
+      });
+    }
+
+    async function onRewrite(angle) {
+      if (!requireApiKey()) return;
+      if (state.rewriting) return;
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      // Capture any pending edits in the textarea first
+      const ta = document.getElementById('desc');
+      if (ta) draft.listing.description = ta.value;
+      state.rewriting = true;
+      toast('Rewriting…', 'good', 1500);
+      try {
+        const newDesc = await rewriteListing({ listing: draft.listing, angle });
+        draft.listing.description = newDesc.trim();
+        await saveDraft(draft);
+        await render();
+        toast('Description updated. Edit anything you want.', 'good', 2400);
+      } catch (err) {
+        toast(err.message || 'Rewrite failed.', 'bad', 4000);
+      } finally {
+        state.rewriting = false;
+      }
+    }
+
+    // ============================================================
+    // Sales tracking
+    // ============================================================
+    async function onTogglePosted(platformId) {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      draft.postedTo = draft.postedTo || [];
+      const idx = draft.postedTo.findIndex((p) => p.platform === platformId);
+      if (idx >= 0) {
+        draft.postedTo.splice(idx, 1);
+      } else {
+        draft.postedTo.push({ platform: platformId, postedAt: Date.now() });
+      }
+      // Auto-set status: any postedTo entries → posted; none and not sold → draft
+      if (draft.status !== 'sold' && draft.status !== 'removed') {
+        draft.status = draft.postedTo.length > 0 ? 'posted' : 'draft';
+      }
+      await saveDraft(draft);
+      await render();
+    }
+
+    function onAddOffer() {
+      openModal(`
+        <h3>Log an offer</h3>
+        <p class="muted small" style="margin-bottom: 14px;">Track what buyers offer so you have a record.</p>
+        <label class="field">
+          <span class="lbl">Amount ($)</span>
+          <input class="input" type="number" inputmode="decimal" id="offer-amount" placeholder="120" />
+        </label>
+        <label class="field">
+          <span class="lbl">Buyer name (optional)</span>
+          <input class="input" type="text" id="offer-buyer" placeholder="e.g. Mike on Marketplace" />
+        </label>
+        <div class="row" style="gap: 8px;">
+          <button class="btn primary" data-action="submit-offer">Save</button>
+          <button class="btn ghost" data-action="close-modal">Cancel</button>
+        </div>
+      `);
+    }
+
+    async function onSubmitOffer() {
+      const amt = parseFloat(document.getElementById('offer-amount').value);
+      const buyer = document.getElementById('offer-buyer').value.trim();
+      if (!Number.isFinite(amt) || amt <= 0) { toast('Enter a valid amount.', 'bad'); return; }
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      draft.offers = draft.offers || [];
+      draft.offers.push({ amount: amt, buyer: buyer || null, at: Date.now(), status: 'open' });
+      await saveDraft(draft);
+      closeModal();
+      await render();
+      toast('Offer logged.', 'good');
+    }
+
+    async function onRemoveOffer(idx) {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      draft.offers.splice(idx, 1);
+      await saveDraft(draft);
+      await render();
+    }
+
+    function onMarkSoldDialog() {
+      openModal(`
+        <h3>Mark as sold 🎉</h3>
+        <label class="field">
+          <span class="lbl">Sold for ($)</span>
+          <input class="input" type="number" inputmode="decimal" id="sold-amount" placeholder="120" />
+        </label>
+        <label class="field">
+          <span class="lbl">Where did it sell?</span>
+          <select class="select" id="sold-platform">
+            <option value="">— pick one —</option>
+            ${MARKETS.map((m) => `<option value="${m.id}">${m.name}</option>`).join('')}
+            <option value="other">Other / off-platform</option>
+          </select>
+        </label>
+        <div class="row" style="gap: 8px;">
+          <button class="btn primary" data-action="submit-sold">Confirm</button>
+          <button class="btn ghost" data-action="close-modal">Cancel</button>
+        </div>
+      `);
+    }
+
+    async function onSubmitSold() {
+      const amt = parseFloat(document.getElementById('sold-amount').value);
+      const plat = document.getElementById('sold-platform').value;
+      if (!Number.isFinite(amt) || amt <= 0) { toast('Enter a valid amount.', 'bad'); return; }
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      draft.status = 'sold';
+      draft.soldFor = amt;
+      draft.soldAt = Date.now();
+      draft.soldOnPlatform = plat || null;
+      // Mark any matching offer accepted
+      if (draft.offers?.length) {
+        const match = draft.offers.find((o) => Math.abs(o.amount - amt) < 0.01);
+        if (match) match.status = 'accepted';
+      }
+      await saveDraft(draft);
+      closeModal();
+      confetti(80);
+      await render();
+      toast('Nice — logged.', 'good');
+    }
+
+    async function onUnmarkSold() {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      if (!confirm('Undo "sold"?')) return;
+      draft.status = (draft.postedTo || []).length > 0 ? 'posted' : 'draft';
+      delete draft.soldFor;
+      delete draft.soldAt;
+      delete draft.soldOnPlatform;
+      await saveDraft(draft);
+      await render();
+    }
+
+    async function onMarkRemoved() {
+      const draft = await getDraft(state.currentDraftId);
+      if (!draft) return;
+      if (!confirm('Mark this listing as removed (didn\'t sell)?')) return;
+      draft.status = 'removed';
+      await saveDraft(draft);
+      await render();
+    }
+
+    // ============================================================
+    // Boot
+    // ============================================================
+    (async function init() {
+      // Default to settings if no key on first load
+      if (!settings.apiKey) state.view = 'settings';
+      await render();
+    })();
+  </script>
+</body>
+</html>

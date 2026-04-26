@@ -1,0 +1,10 @@
+{
+  "name": "sales-genie",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sales Genie — AI-powered selling assistant. Single-file mobile web app.",
+  "scripts": {
+    "dev": "npx --yes serve .",
+    "start": "npx --yes serve ."
+  }
+}
