@@ -14,6 +14,7 @@ import sys
 
 import numpy as np
 import soundfile as sf
+from numpy.lib.stride_tricks import sliding_window_view
 
 
 TARGET_SR = 16_000
@@ -47,16 +48,17 @@ def load_mono(path: str) -> tuple[np.ndarray, int]:
 def frame_rms_db(audio: np.ndarray, sr: int) -> tuple[np.ndarray, int]:
     frame = int(sr * FRAME_MS / 1000)
     hop = int(sr * HOP_MS / 1000)
-    n = max(0, 1 + (len(audio) - frame) // hop)
-    rms = np.empty(n, dtype=np.float32)
-    for i in range(n):
-        seg = audio[i * hop : i * hop + frame]
-        rms[i] = np.sqrt(float(np.mean(seg * seg)) + 1e-12)
+    if len(audio) < frame:
+        return np.array([], dtype=np.float32), hop
+    windows = sliding_window_view(audio.astype(np.float32) ** 2, frame)[::hop]
+    rms = np.sqrt(windows.mean(axis=-1) + 1e-12)
     db = 20.0 * np.log10(np.maximum(rms, 1e-7))
-    return db, hop
+    return db.astype(np.float32), hop
 
 
 def find_silences(db: np.ndarray, hop: int, sr: int) -> tuple[list[tuple[float, float]], float]:
+    if len(db) == 0:
+        return [], -100.0
     # Adaptive threshold so the detector survives recordings at different gains.
     sorted_db = np.sort(db)
     loud_ref = float(np.mean(sorted_db[int(len(db) * 0.4):]))
@@ -125,11 +127,16 @@ def classify(segs: list[tuple[float, float]]) -> list[str]:
 def mute_events(segs: list[tuple[float, float]], labels: list[str]) -> list[dict]:
     events: list[dict] = []
     state = "unmute"
-    for (s, _), label in zip(segs, labels):
+    last_end = 0.0
+    for (s, e), label in zip(segs, labels):
         target = "mute" if label == "ad" else "unmute"
         if target != state:
             events.append({"t": round(s, 2), "action": target})
             state = target
+        last_end = e
+    # If the recording ends mid-ad-pod, restore audio so the TV doesn't stay muted.
+    if state == "mute":
+        events.append({"t": round(last_end, 2), "action": "unmute"})
     return events
 
 
