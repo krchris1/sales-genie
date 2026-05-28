@@ -1041,52 +1041,19 @@
     }
 
     // ============================================================
-    // Claude API (called directly from browser)
+    // Claude API (DISABLED)
     // ============================================================
-    // Returns true if the user has a key. If not, toasts + sends them to Settings
-    // and returns false so callers can short-circuit.
+    // All Claude API calls are temporarily disabled. Both the gate and the
+    // network call short-circuit so nothing reaches api.anthropic.com.
+    const CLAUDE_DISABLED_MSG = 'Claude API is currently disabled. AI features are turned off.';
+
     function requireApiKey() {
-      if (settings.apiKey) return true;
-      toast('Add your Claude API key in Settings first.', 'bad', 3500);
-      setView('settings');
+      toast(CLAUDE_DISABLED_MSG, 'bad', 4000);
       return false;
     }
 
     async function callClaude({ system, messages, maxTokens = 1500 }) {
-      if (!settings.apiKey) throw new Error('Claude API key not set. Open Settings to add it.');
-      let res;
-      try {
-        res = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-            'x-api-key': settings.apiKey,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true',
-          },
-          body: JSON.stringify({
-            model: settings.model,
-            max_tokens: maxTokens,
-            system,
-            messages,
-          }),
-        });
-      } catch (netErr) {
-        // fetch only rejects on network errors / CORS / aborts.
-        throw new Error("Couldn't reach Claude. Check your internet connection and try again.");
-      }
-      if (!res.ok) {
-        const text = await res.text();
-        let detail = '';
-        try { detail = JSON.parse(text).error?.message || ''; } catch {}
-        if (res.status === 401) throw new Error('Your Claude API key was rejected. Update it in Settings.');
-        if (res.status === 429) throw new Error("Claude is rate-limited right now. Wait a bit and try again.");
-        if (res.status === 529 || res.status === 503) throw new Error('Claude is temporarily overloaded. Try again in a moment.');
-        if (res.status >= 500) throw new Error(`Claude had a problem (${res.status}). Try again in a moment.`);
-        throw new Error(detail || `Claude API error (${res.status})`);
-      }
-      const json = await res.json();
-      return json.content?.map((c) => c.text).join('\n') || '';
+      throw new Error(CLAUDE_DISABLED_MSG);
     }
 
     // Pull the first ```json block, or fall back to the whole text.
